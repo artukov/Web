@@ -9,11 +9,8 @@ Projekat za web
 
 # Tehnologije
 
-Za front
-
 Vue.js
 
-Za back
-
 JAX RS
+
 Apache Tomcat
