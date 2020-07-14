@@ -1,15 +1,19 @@
 # Web
 Projekat za web
 
-#Kontributori
+# Kontributori
 
 @artukov Nikola Artukov
 
 @IvanLecic97 Ivan lecic
 
-#Tehnologije
+# Tehnologije
+
 Za front
+
 Vue.js
+
 Za back
+
 JAX RS
 Apache Tomcat
