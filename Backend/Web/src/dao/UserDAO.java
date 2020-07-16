@@ -98,7 +98,7 @@ public class UserDAO {
 		} finally {
 			
 		}
-		
+		this.users.put(u.getUsername(),u);
 		
 	}
 	
