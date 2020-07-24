@@ -18,6 +18,8 @@ public class Apartment {
 	private boolean appStatus;
 	private List<Amenities> amenities;
 	private List<Reservation> reservations;
+	private Long id;
+	
 	public Apartment() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -41,6 +43,13 @@ public class Apartment {
 		this.appStatus = appStatus;
 		this.amenities = amenities;
 		this.reservations = reservations;
+	}
+	
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
 	}
 	public ApartmentType getApartmentType() {
 		return apartmentType;
