@@ -122,7 +122,7 @@ public void putApartment(Apartment apartment) {
 		Long maxId = allApartments.get(0).getId(); //id prvog u sortiranoj listi je najveci
 		apartment.setId(++maxId); //uvecavanjem za jedan dobijamo da se vrijednost kljuca nece ponoviti
 		
-		System.out.println(maxId);
+		apartment.setAppStatus(false);
 		
 		this.apartments.put(apartment.getId(), apartment);
 	}
