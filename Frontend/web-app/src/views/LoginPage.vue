@@ -46,7 +46,7 @@ export default {
         username: this.form.name,
         password: this.form.password,
       };
-      axios.post("http://localhost:8080/RACompany/rest/login", user);
+      axios.post("http://localhost:8080/Backend/Web/rest/login", user);
     },
   },
 };

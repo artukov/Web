@@ -88,7 +88,7 @@ export default {
         name: this.form.name,
         lastname: this.form.lastname,
       };
-      axios.post("http://localhost:8080/RACompany/rest/register", user);
+      axios.post("http://localhost:8080/Backend/Web/rest/register", user);
     },
   },
 };
