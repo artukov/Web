@@ -35,18 +35,29 @@ export default {
     return {
       form: {
         password: "",
-        name: "",
+        username: "",
       },
       info: null,
+      error: false,
+      errorMessage: "",
     };
   },
   methods: {
     onSubmit() {
-      var user = {
-        username: this.form.name,
-        password: this.form.password,
-      };
-      axios.post("http://localhost:8080/Web/rest/login", user);
+      // var user = {
+      //   username: this.form.name,
+      //   password: this.form.password,
+      // };
+      // axios.post("http://localhost:8080/Web/rest/login", user);
+      axios.post("/Web/rest/login", this.form)
+      .then(response => {
+        this.form.password = "";
+        this.form.username = "";
+      })
+      .catch(error => {
+        this.errorMessage = "Bad credentials."
+        this.error = true;
+      })
     },
   },
 };

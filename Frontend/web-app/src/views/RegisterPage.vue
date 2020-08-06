@@ -76,19 +76,29 @@ export default {
       },
       genders: ["Male", "Female"],
       roles: ["GUEST", "HOST"],
+      error: false,
+      errorMessage: ""
     };
   },
   methods: {
     onSubmit() {
-      var user = {
-        username: this.form.name,
-        password: this.form.password,
-        gender: this.form.gender,
-        userRole: this.form.role,
-        name: this.form.name,
-        lastname: this.form.lastname,
-      };
-      axios.post("http://localhost:8080/Web/rest/register", user);
+    //   var user = {
+    //     username: this.form.name,
+    //     password: this.form.password,
+    //     gender: this.form.gender,
+    //     userRole: this.form.role,
+    //     name: this.form.name,
+    //     lastname: this.form.lastname,
+    //   };
+      axios.post("/Web/rest/register", this.form)
+      .then(form => {
+        this.form = form.data;
+        this.error = false;
+      })
+      .catch(error => {
+        this.errorMessage = "Bad credentials."
+        this.error = true;
+      })
     },
   },
 };
