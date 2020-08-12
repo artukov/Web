@@ -3,6 +3,8 @@ import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
 import RegisterPage from "../views/RegisterPage.vue";
 import LoginPage from "../views/LoginPage.vue";
+import ProfilePage from "../views/ProfilePage.vue";
+import SearchUsers from "../views/SearchUsers.vue";
 
 Vue.use(VueRouter);
 
@@ -31,6 +33,16 @@ const routes = [
     name: "RegisterPage",
     component: RegisterPage,
   },
+  {
+    path: "/profile",
+    name: "ProfilePage",
+    component: ProfilePage,
+  },
+  {
+    path: "/searchUsers",
+    name: "SearchUsers",
+    component: SearchUsers,
+  }
 ];
 
 const router = new VueRouter({

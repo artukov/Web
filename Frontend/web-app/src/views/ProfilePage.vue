@@ -6,7 +6,7 @@
           id="input-2"
           v-model="form.username"
           required
-          placeholder="Enter username"
+          readonly
         ></b-form-input>
       </b-form-group>
 
@@ -16,7 +16,15 @@
           v-model="form.password"
           type="password"
           required
-          placeholder="Enter password"
+        ></b-form-input>
+      </b-form-group>
+
+      <b-form-group id="input-group-1" label="Confirm password:" label-for="input-1">
+        <b-form-input
+          id="input-1"
+          v-model="confirmPass"
+          type="password"
+          required
         ></b-form-input>
       </b-form-group>
 
@@ -25,7 +33,6 @@
           id="input-2"
           v-model="form.name"
           required
-          placeholder="Enter name"
         ></b-form-input>
       </b-form-group>
 
@@ -34,7 +41,6 @@
           id="input-2"
           v-model="form.lastname"
           required
-          placeholder="Enter lastname"
         ></b-form-input>
       </b-form-group>
 
@@ -56,7 +62,7 @@
         ></b-form-select>
       </b-form-group>
 
-      <b-button type="submit" variant="primary">Register</b-button>
+      <b-button type="submit" variant="primary">Change profile</b-button>
     </b-form>
   </div>
 </template>
@@ -77,11 +83,13 @@ export default {
       genders: ["Male", "Female"],
       roles: ["GUEST", "HOST"],
       error: false,
-      errorMessage: ""
+      errorMessage: "",
+      confirmPass: "",
+      info: ""
     };
   },
   methods: {
-    onSubmit() {
+    mounted() {
     //   var user = {
     //     username: this.form.name,
     //     password: this.form.password,
@@ -90,7 +98,7 @@ export default {
     //     name: this.form.name,
     //     lastname: this.form.lastname,
     //   };
-      axios.post("/Web/rest/register", this.form)
+      axios.get("/Web/rest/currentUser", this.form)
       .then(form => {
         this.form = form.data;
         this.error = false;
@@ -101,6 +109,25 @@ export default {
         error;
       })
     },
+
+    onSubmit() {
+      if(this.form.password != this.confirmPass) {
+        this.error = true;
+        this.errorMessage = "Password does not match!";
+        return;
+      }
+      axios.post("/Web/rest/changeUser", this.form)
+        .then(form => {
+          this.form = form.data;
+          this.error = false;
+          this.info = "User profile successfully changed.";
+        })
+        .catch(error => {
+          this.errorMessage = "Bad credentials."
+          this.error = true;
+          error;
+        })
+    }
   },
 };
 </script>

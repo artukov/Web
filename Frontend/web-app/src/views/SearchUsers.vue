@@ -6,7 +6,7 @@
           id="input-2"
           v-model="form.username"
           required
-          placeholder="Enter username"
+          readonly
         ></b-form-input>
       </b-form-group>
 
@@ -16,7 +16,6 @@
           v-model="form.password"
           type="password"
           required
-          placeholder="Enter password"
         ></b-form-input>
       </b-form-group>
 
@@ -25,7 +24,6 @@
           id="input-2"
           v-model="form.name"
           required
-          placeholder="Enter name"
         ></b-form-input>
       </b-form-group>
 
@@ -34,7 +32,6 @@
           id="input-2"
           v-model="form.lastname"
           required
-          placeholder="Enter lastname"
         ></b-form-input>
       </b-form-group>
 
@@ -56,7 +53,7 @@
         ></b-form-select>
       </b-form-group>
 
-      <b-button type="submit" variant="primary">Register</b-button>
+      <b-button type="submit" variant="primary">Search users</b-button>
     </b-form>
   </div>
 </template>
@@ -77,30 +74,26 @@ export default {
       genders: ["Male", "Female"],
       roles: ["GUEST", "HOST"],
       error: false,
-      errorMessage: ""
+      errorMessage: "",
+      confirmPass: "",
+      info: ""
     };
   },
   methods: {
+
     onSubmit() {
-    //   var user = {
-    //     username: this.form.name,
-    //     password: this.form.password,
-    //     gender: this.form.gender,
-    //     userRole: this.form.role,
-    //     name: this.form.name,
-    //     lastname: this.form.lastname,
-    //   };
-      axios.post("/Web/rest/register", this.form)
-      .then(form => {
-        this.form = form.data;
-        this.error = false;
-      })
-      .catch(error => {
-        this.errorMessage = "Bad credentials."
-        this.error = true;
-        error;
-      })
-    },
+      axios.post("/Web/rest/searchUsers", this.form)
+        .then(form => {
+          this.form = form.data;
+          this.error = false;
+          this.info = "User profile successfully changed.";
+        })
+        .catch(error => {
+          this.errorMessage = "Bad credentials."
+          this.error = true;
+          error;
+        })
+    }
   },
 };
 </script>

@@ -44,6 +44,7 @@ export default {
   },
   methods: {
     onSubmit() {
+      console.log("ADS")
       // var user = {
       //   username: this.form.name,
       //   password: this.form.password,
@@ -53,10 +54,12 @@ export default {
       .then(response => {
         this.form.password = "";
         this.form.username = "";
+        response;
       })
       .catch(error => {
         this.errorMessage = "Bad credentials."
         this.error = true;
+        error;
       })
     },
   },
