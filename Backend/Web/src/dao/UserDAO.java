@@ -199,6 +199,7 @@ public class UserDAO {
 		
 		return null;
 	}
+
 	
 	public void remove(User user) {
 		if (users.containsKey(user.getUsername())) {

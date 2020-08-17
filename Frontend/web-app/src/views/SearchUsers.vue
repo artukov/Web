@@ -1,21 +1,38 @@
 <template>
   <div class="position">
-    <b-form @submit.prevent="onSubmit" method="post">
+
+
+
+
+
+
+
+<b-container>
+         <div>
+    <b-table class="mt-2 mb-2" striped hover :items="users"  selectable caption-top bgcolor="white">
+          <!-- <template v-slot:table-caption><h3>Ads list</h3>
+          </template> -->
+    </b-table>
+  </div>
+</b-container>
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- @submit.prevent="onSubmit" -->
+    <b-form  @submit.prevent="onSubmit"  method="get">
       <b-form-group id="input-group-2" label="Username:" label-for="input-2">
         <b-form-input
           id="input-2"
           v-model="form.username"
-          required
-          readonly
-        ></b-form-input>
-      </b-form-group>
-
-      <b-form-group id="input-group-1" label="Password:" label-for="input-1">
-        <b-form-input
-          id="input-1"
-          v-model="form.password"
-          type="password"
-          required
         ></b-form-input>
       </b-form-group>
 
@@ -23,15 +40,13 @@
         <b-form-input
           id="input-2"
           v-model="form.name"
-          required
         ></b-form-input>
       </b-form-group>
 
       <b-form-group id="input-group-3" label="Lastname:" label-for="input-2">
         <b-form-input
           id="input-2"
-          v-model="form.lastname"
-          required
+          v-model="form.lastName"
         ></b-form-input>
       </b-form-group>
 
@@ -40,7 +55,6 @@
           id="input-3"
           v-model="form.gender"
           :options="genders"
-          required
         ></b-form-select>
       </b-form-group>
 
@@ -49,7 +63,6 @@
           id="input-3"
           v-model="form.role"
           :options="roles"
-          required
         ></b-form-select>
       </b-form-group>
 
@@ -65,28 +78,41 @@ export default {
     return {
       form: {
         username: "",
-        password: "",
         name: "",
-        lastname: "",
-        gender: "",
-        role: "",
+        lastName: "",
+        gender: null,
+        role: null,
       },
-      genders: ["Male", "Female"],
+      genders: ["MALE", "FEMALE"],
       roles: ["GUEST", "HOST"],
       error: false,
       errorMessage: "",
       confirmPass: "",
-      info: ""
+      info: "",
+      users: [],
+      proba: "",
+      povratak: ""
     };
   },
   methods: {
 
+    mounted() {
+      axios.get("/Web/rest/users")
+        .then(users => {
+          this.users = users.data;
+        })
+        .catch(error => {
+          this.error = true;
+          error;
+        })
+      },
+
     onSubmit() {
-      axios.post("/Web/rest/searchUsers", this.form)
-        .then(form => {
-          this.form = form.data;
+      axios.post("/Web/rest/search", this.form)
+        .then(users => {
+          this.users = users.data;
           this.error = false;
-          this.info = "User profile successfully changed.";
+          this.info = "Search successful.";
         })
         .catch(error => {
           this.errorMessage = "Bad credentials."
@@ -94,7 +120,7 @@ export default {
           error;
         })
     }
-  },
+  }
 };
 </script>
 
