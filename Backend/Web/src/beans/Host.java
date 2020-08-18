@@ -9,8 +9,17 @@ public class Host extends User {
 	public Host() {
 		super();
 		// TODO Auto-generated constructor stub
+		this.setRole(UserRole.HOST);
 	}
 
+	public Host(User user) {
+		this.setName(user.getName());
+		this.setLastName(user.getLastName());
+		this.setPassword(user.getPassword());
+		this.setGender(user.getGender());
+		this.setUsername(user.getUsername());
+		this.setRole(user.getRole());
+	}
 	public Host(String username, String password, String name, String lastName, GenderEnum gender, UserRole role) {
 		super(username, password, name, lastName, gender, role);
 		// TODO Auto-generated constructor stub

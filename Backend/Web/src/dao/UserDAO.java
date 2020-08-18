@@ -1,7 +1,6 @@
 package dao;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -41,10 +40,12 @@ public class UserDAO {
 		this.users = users;
 	}
 	
+	
 	public boolean find(String username) {
 		if (!users.containsKey(username)) {
 			return false;
 		}
+		
 		
 		return true;
 	}
@@ -147,10 +148,10 @@ public class UserDAO {
 		return "UserDAO [users=" + users + "]";
 	}
 	
-	public void stavi(User restoran) {
+	public void stavi(User user) {
 		// TODO Auto-generated method stub
 		
-		users.put(restoran.getUsername(), restoran);
+		users.put(user.getUsername(), user);
 		
 	}
 	
@@ -186,36 +187,25 @@ public class UserDAO {
 		}
 	}
 	
-	
-	
-	
-	
-	public User add(User user) {
-		
-		if (!users.containsKey(user.getUsername())) {
-			users.put(user.getUsername(), user);
-			return users.get(user.getUsername());
-		}
-		
-		return null;
-	}
-
-	
-	public void remove(User user) {
-		if (users.containsKey(user.getUsername())) {
-			users.remove(user.getUsername(), user);
+	public User findUser(String username) {
+		User user = this.users.get(username);
+		if(user == null) {
+			return null;
+		}else {
+			return user;
 		}
 	}
-
-//	public void save() {
-//		ObjectMapper objectMapper = new ObjectMapper();
-//		try {
-//			objectMapper.writeValue(new File(this.path + "/users.json"), this.users);
-//		} catch (IOException e) {
-//		// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//}
+	
+	public boolean modifyUser(User newUser, String usrnm) {
+		if(!find(usrnm)) {
+			return false;
+		}
+		
+		this.users.put(usrnm, newUser);
+		return true;
+		
+		
+	}
 
 }
 
