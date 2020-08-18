@@ -12,6 +12,15 @@ public class User {
 			super();
 			// TODO Auto-generated constructor stub
 		}
+		public User(User u) {
+			super();
+			this.username = u.username;
+			this.password = u.password;
+			this.name = u.name;
+			this.lastName = u.lastName;
+			this.gender = u.gender;
+			this.role = u.role;
+		}
 		public User(String username, String password, String name, String lastName, GenderEnum gender, UserRole role) {
 			super();
 			this.username = username;

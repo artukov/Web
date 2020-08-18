@@ -1,11 +1,15 @@
 package dao;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
+import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import beans.User;
@@ -13,7 +17,7 @@ import beans.User;
 public class UserDAO {
 
 	private HashMap<String, User> users = new HashMap<>();
-	
+	private String contextPath;
 	private UserDAO() {
 		
 		
@@ -205,6 +209,105 @@ public class UserDAO {
 		return true;
 		
 		
+	}
+	public void saveUsers()  throws JsonParseException, JsonMappingException, IOException  {
+		ObjectMapper mapper = new ObjectMapper();
+		// lista administratora
+		
+		ArrayList<User> userList = new ArrayList<User>();
+		for (User u : this.users.values()) {
+			User temp= new User(u);
+			userList.add(temp);
+		}
+		/*ArrayList<Admin> adminList = new ArrayList<Admin>();
+		for(User iter : this.users.values()) {
+			if(iter.getUserRole() == UserRole.ADMIN) {
+				Admin temp = new Admin(iter);
+				adminList.add(temp);
+			}
+		}
+		//lista domacina
+		ArrayList<Host> hostList = new ArrayList<Host>();
+		for(User iter : this.users.values()) {
+			if(iter.getUserRole() == UserRole.HOST) {
+				Host temp = new Host(iter);
+				hostList.add(temp);
+			}
+		}
+		
+		//lista gostiju
+		ArrayList<Guest> guestList = new ArrayList<Guest>();
+		for(User iter : this.users.values()) {
+			if(iter.getUserRole() == UserRole.GUEST) {
+				Guest temp = new Guest(iter);
+				guestList.add(temp);
+			}
+		}*\
+		
+		/**
+		 * Upisivanje liste u fajl 
+		 * */
+		//System.out.println(adminList);
+		
+		//upisivanje administratora
+		File userFile = new File(this.contextPath+"users.json");
+		try {
+			mapper.writerWithDefaultPrettyPrinter().writeValue(userFile, 
+					userList);
+		}
+		catch (JsonGenerationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new JsonGenerationException("JSON generalizacija");
+		} catch (JsonMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new JsonMappingException("mapiranje JSON");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new IOException();
+		}
+		/*
+		//upisivanje domacina
+		File hostFile = new File(this.contextPath + "data/host.json");
+		try {
+			mapper.writerWithDefaultPrettyPrinter().writeValue(hostFile, 
+					hostList);
+		}
+		catch (JsonGenerationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new JsonGenerationException("JSON generalizacija");
+		} catch (JsonMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new JsonMappingException("mapiranje JSON");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new IOException();
+		}
+		
+		//upisivanje gosta
+		File guestFile = new File(this.contextPath + "data/guest.json");
+		try {
+			mapper.writerWithDefaultPrettyPrinter().writeValue(guestFile, 
+					guestList);
+		}
+		catch (JsonGenerationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new JsonGenerationException("JSON generalizacija");
+		} catch (JsonMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new JsonMappingException("mapiranje JSON");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new IOException();
+		}*/
 	}
 
 }
