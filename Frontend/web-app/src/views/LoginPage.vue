@@ -4,7 +4,7 @@
       <b-form-group id="input-group-2" label="Username:" label-for="input-2">
         <b-form-input
           id="input-2"
-          v-model="form.name"
+          v-model="form.username"
           type="text"
           required
           placeholder="Enter username"
@@ -35,18 +35,33 @@ export default {
     return {
       form: {
         password: "",
-        name: "",
+        username: "",
       },
       info: null,
+      error: false,
+      errorMessage: "",
     };
   },
   methods: {
     onSubmit() {
-      var user = {
-        username: this.form.name,
-        password: this.form.password,
-      };
-      axios.post("http://localhost:8080/Web/rest/login", user);
+      console.log("ADS")
+      // var user = {
+      //   username: this.form.name,
+      //   password: this.form.password,
+      // };
+      // axios.post("http://localhost:8080/Web/rest/login", user);
+      axios.post("/Web/rest/login", this.form)
+      .then(response => {
+        this.form.password = "";
+        this.form.username = "";
+        response;
+        this.$router.push("/");
+      })
+      .catch(error => {
+        this.errorMessage = "Bad credentials."
+        this.error = true;
+        error;
+      })
     },
   },
 };

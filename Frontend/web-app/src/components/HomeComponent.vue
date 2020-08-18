@@ -51,7 +51,8 @@ export default {
   name: "HomeContentComponent",
   mounted: function() {
     axios
-      .get("http://localhost:8080/RACompany/rest/apartment/helloWorld")
+      // .get("http://localhost:8080/RACompany/rest/apartment/helloWorld")
+      .get("/RACompany/rest/apartment/helloWorld")
       .then((response) => (this.info = response.data));
   },
   data() {

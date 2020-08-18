@@ -1,22 +1,38 @@
 <template>
   <div class="position">
-    <b-form @submit.prevent="onSubmit" method="post">
+
+
+
+
+
+
+
+<b-container>
+         <div>
+    <b-table class="mt-2 mb-2" striped hover :items="users"  selectable caption-top bgcolor="white">
+          <!-- <template v-slot:table-caption><h3>Ads list</h3>
+          </template> -->
+    </b-table>
+  </div>
+</b-container>
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- @submit.prevent="onSubmit" -->
+    <b-form  @submit.prevent="onSubmit"  method="get">
       <b-form-group id="input-group-2" label="Username:" label-for="input-2">
         <b-form-input
           id="input-2"
           v-model="form.username"
-          required
-          placeholder="Enter username"
-        ></b-form-input>
-      </b-form-group>
-
-      <b-form-group id="input-group-1" label="Password:" label-for="input-1">
-        <b-form-input
-          id="input-1"
-          v-model="form.password"
-          type="password"
-          required
-          placeholder="Enter password"
         ></b-form-input>
       </b-form-group>
 
@@ -24,8 +40,6 @@
         <b-form-input
           id="input-2"
           v-model="form.name"
-          required
-          placeholder="Enter name"
         ></b-form-input>
       </b-form-group>
 
@@ -33,8 +47,6 @@
         <b-form-input
           id="input-2"
           v-model="form.lastName"
-          required
-          placeholder="Enter lastname"
         ></b-form-input>
       </b-form-group>
 
@@ -43,7 +55,6 @@
           id="input-3"
           v-model="form.gender"
           :options="genders"
-          required
         ></b-form-select>
       </b-form-group>
 
@@ -52,11 +63,13 @@
           id="input-3"
           v-model="form.role"
           :options="roles"
-          required
         ></b-form-select>
       </b-form-group>
 
-      <b-button type="submit" variant="primary">Register</b-button>
+<div>
+      <b-button type="submit" variant="primary" class="btn-block z-depth-2">Search users</b-button>
+      <b-button type="button" variant="primary" class="btn-block z-depth-2" @click="showAllUsers">Show all users</b-button>
+    </div>
     </b-form>
   </div>
 </template>
@@ -68,7 +81,6 @@ export default {
     return {
       form: {
         username: "",
-        password: "",
         name: "",
         lastName: "",
         gender: null,
@@ -77,32 +89,40 @@ export default {
       genders: ["MALE", "FEMALE"],
       roles: ["GUEST", "HOST"],
       error: false,
-      errorMessage: ""
+      errorMessage: "",
+      confirmPass: "",
+      info: "",
+      users: [],
+      proba: "",
+      povratak: ""
     };
   },
   methods: {
+
     onSubmit() {
-    //   var user = {
-    //     username: this.form.name,
-    //     password: this.form.password,
-    //     gender: this.form.gender,
-    //     userRole: this.form.role,
-    //     name: this.form.name,
-    //     lastname: this.form.lastname,
-    //   };
-      axios.post("/Web/rest/register", this.form)
-      .then(form => {
-        this.form = form.data;
-        this.error = false;
-        this.$router.push("/");
-      })
-      .catch(error => {
-        this.errorMessage = "Bad credentials."
-        this.error = true;
-        error;
-      })
+      axios.post("/Web/rest/search", this.form)
+        .then(users => {
+          this.users = users.data;
+          this.error = false;
+          this.info = "Search successful.";
+        })
+        .catch(error => {
+          this.errorMessage = "Bad credentials."
+          this.error = true;
+          error;
+        })
     },
-  },
+
+    showAllUsers() {
+      axios.get("/Web/rest/users")
+        .then(users => {
+          this.users = users.data;
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    }
+  }
 };
 </script>
 
