@@ -51,38 +51,6 @@ public class LoginService {
 		return loggedUser;
 	}
 	
-//	@POST
-//	@Path("/register")
-//	@Consumes(MediaType.APPLICATION_JSON)
-//	@Produces(MediaType.APPLICATION_JSON)
-//	public User register(User user, @Context HttpServletRequest request) { //vidi dal user ili response pa sta onda
-//		System.out.print("ajmooo");
-//		System.out.println(user);
-//		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
-//		boolean loggedUser = userDao.find(user.getUsername());
-//		User userLog = userDao.find(user.getUsername(), user.getPassword());
-//		System.out.println(loggedUser+"register klasa");
-//		if (loggedUser== true) {
-//			//return Response.status(400).entity("Korisnicko ime vec postoji!").build();
-//			System.out.println("Idemoo");
-//			return null;
-//		}
-//		
-////		boolean ime=isValidExpression(user.getName());
-////		boolean prezime=isValidExpression(user.getLastName());
-//		
-//		
-////		if(!ime) return null;;
-////		if(!prezime) return null;;
-//		
-//		
-//		String contextPath = ctx.getRealPath("");
-//		userDao.dodaj(user,contextPath);
-//		System.out.println(userDao);
-//		
-//		return userLog;
-//	}
-	
 	@GET
 	@Path("/logout")
 	@Consumes(MediaType.APPLICATION_JSON)

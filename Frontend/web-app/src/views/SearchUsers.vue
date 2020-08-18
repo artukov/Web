@@ -66,7 +66,10 @@
         ></b-form-select>
       </b-form-group>
 
-      <b-button type="submit" variant="primary">Search users</b-button>
+<div>
+      <b-button type="submit" variant="primary" class="btn-block z-depth-2">Search users</b-button>
+      <b-button type="button" variant="primary" class="btn-block z-depth-2" @click="showAllUsers">Show all users</b-button>
+    </div>
     </b-form>
   </div>
 </template>
@@ -96,17 +99,6 @@ export default {
   },
   methods: {
 
-    mounted() {
-      axios.get("/Web/rest/users")
-        .then(users => {
-          this.users = users.data;
-        })
-        .catch(error => {
-          this.error = true;
-          error;
-        })
-      },
-
     onSubmit() {
       axios.post("/Web/rest/search", this.form)
         .then(users => {
@@ -119,6 +111,16 @@ export default {
           this.error = true;
           error;
         })
+    },
+
+    showAllUsers() {
+      axios.get("/Web/rest/users")
+        .then(users => {
+          this.users = users.data;
+        })
+        .catch(error => {
+          console.log(error);
+        });
     }
   }
 };

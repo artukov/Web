@@ -4,7 +4,7 @@
       <b-form-group id="input-group-2" label="Username:" label-for="input-2">
         <b-form-input
           id="input-2"
-          v-model="form.name"
+          v-model="form.username"
           type="text"
           required
           placeholder="Enter username"
@@ -55,6 +55,7 @@ export default {
         this.form.password = "";
         this.form.username = "";
         response;
+        this.$router.push("/");
       })
       .catch(error => {
         this.errorMessage = "Bad credentials."

@@ -32,7 +32,7 @@
       <b-form-group id="input-group-3" label="Lastname:" label-for="input-2">
         <b-form-input
           id="input-2"
-          v-model="form.lastname"
+          v-model="form.lastName"
           required
           placeholder="Enter lastname"
         ></b-form-input>
@@ -70,11 +70,11 @@ export default {
         username: "",
         password: "",
         name: "",
-        lastname: "",
-        gender: "",
-        role: "",
+        lastName: "",
+        gender: null,
+        role: null,
       },
-      genders: ["Male", "Female"],
+      genders: ["MALE", "FEMALE"],
       roles: ["GUEST", "HOST"],
       error: false,
       errorMessage: ""
@@ -94,6 +94,7 @@ export default {
       .then(form => {
         this.form = form.data;
         this.error = false;
+        this.$router.push("/");
       })
       .catch(error => {
         this.errorMessage = "Bad credentials."
