@@ -55,7 +55,7 @@ export default {
         this.form.password = "";
         this.form.username = "";
         response;
-        this.$router.push("/");
+        this.$router.push("/home");
       })
       .catch(error => {
         this.errorMessage = "Bad credentials."
