@@ -5,7 +5,7 @@ Projekat za web
 
 @artukov Nikola Artukov
 
-@SimeunovicB Bojan Simeunovic
+@IvanLecic97 Ivan lecic
 
 # Tehnologije
 

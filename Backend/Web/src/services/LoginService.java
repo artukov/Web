@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
@@ -42,6 +43,7 @@ public class LoginService {
 		User loggedUser = userDao.find(user.getUsername(), user.getPassword());
 		System.out.println(loggedUser);
 		if (loggedUser== null) {
+			System.out.println("Nema takog");
 			return null;
 		}
 		request.getSession().setAttribute("user", loggedUser);
@@ -62,7 +64,26 @@ public class LoginService {
 	@Path("/currentUser")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public User login(@Context HttpServletRequest request) {
+	public User currentUser(@Context HttpServletRequest request) {
 		return (User) request.getSession().getAttribute("user");
+	}
+	
+	@PUT
+	@Path("/changeUser")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public User changeUser(User user, @Context HttpServletRequest request) {
+		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
+		String contextPath = ctx.getRealPath("");
+		userDao.dodaj(user,contextPath); //proveri jel dobro ovo da nece napraviti duplog
+		return user;		
+		
+//		User userToChange = (User) request.getSession().getAttribute("user");
+//		userToChange.setUsername(user.getUsername());
+//		userToChange.setName(user.getName());
+//		userToChange.setPassword(user.getPassword());
+//		userToChange.setRole(user.getRole());
+//		userToChange.setGender(user.getGender());
+		
 	}
 }

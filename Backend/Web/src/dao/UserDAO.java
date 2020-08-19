@@ -6,10 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
-import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import beans.User;
@@ -17,7 +14,7 @@ import beans.User;
 public class UserDAO {
 
 	private HashMap<String, User> users = new HashMap<>();
-	private String contextPath;
+	
 	private UserDAO() {
 		
 		
@@ -44,12 +41,10 @@ public class UserDAO {
 		this.users = users;
 	}
 	
-	
 	public boolean find(String username) {
 		if (!users.containsKey(username)) {
 			return false;
 		}
-		
 		
 		return true;
 	}
@@ -152,10 +147,10 @@ public class UserDAO {
 		return "UserDAO [users=" + users + "]";
 	}
 	
-	public void stavi(User user) {
+	public void stavi(User restoran) {
 		// TODO Auto-generated method stub
 		
-		users.put(user.getUsername(), user);
+		users.put(restoran.getUsername(), restoran);
 		
 	}
 	
@@ -191,124 +186,36 @@ public class UserDAO {
 		}
 	}
 	
-	public User findUser(String username) {
-		User user = this.users.get(username);
-		if(user == null) {
-			return null;
-		}else {
-			return user;
-		}
-	}
 	
-	public boolean modifyUser(User newUser, String usrnm) {
-		if(!find(usrnm)) {
-			return false;
+	
+	
+	
+	public User add(User user) {
+		
+		if (!users.containsKey(user.getUsername())) {
+			users.put(user.getUsername(), user);
+			return users.get(user.getUsername());
 		}
 		
-		this.users.put(usrnm, newUser);
-		return true;
-		
-		
+		return null;
 	}
-	public void saveUsers()  throws JsonParseException, JsonMappingException, IOException  {
-		ObjectMapper mapper = new ObjectMapper();
-		// lista administratora
-		
-		ArrayList<User> userList = new ArrayList<User>();
-		for (User u : this.users.values()) {
-			User temp= new User(u);
-			userList.add(temp);
+
+	
+	public void remove(User user) {
+		if (users.containsKey(user.getUsername())) {
+			users.remove(user.getUsername(), user);
 		}
-		/*ArrayList<Admin> adminList = new ArrayList<Admin>();
-		for(User iter : this.users.values()) {
-			if(iter.getUserRole() == UserRole.ADMIN) {
-				Admin temp = new Admin(iter);
-				adminList.add(temp);
-			}
-		}
-		//lista domacina
-		ArrayList<Host> hostList = new ArrayList<Host>();
-		for(User iter : this.users.values()) {
-			if(iter.getUserRole() == UserRole.HOST) {
-				Host temp = new Host(iter);
-				hostList.add(temp);
-			}
-		}
-		
-		//lista gostiju
-		ArrayList<Guest> guestList = new ArrayList<Guest>();
-		for(User iter : this.users.values()) {
-			if(iter.getUserRole() == UserRole.GUEST) {
-				Guest temp = new Guest(iter);
-				guestList.add(temp);
-			}
-		}*\
-		
-		/**
-		 * Upisivanje liste u fajl 
-		 * */
-		//System.out.println(adminList);
-		
-		//upisivanje administratora
-		File userFile = new File(this.contextPath+"users.json");
-		try {
-			mapper.writerWithDefaultPrettyPrinter().writeValue(userFile, 
-					userList);
-		}
-		catch (JsonGenerationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			throw new JsonGenerationException("JSON generalizacija");
-		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			throw new JsonMappingException("mapiranje JSON");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			throw new IOException();
-		}
-		/*
-		//upisivanje domacina
-		File hostFile = new File(this.contextPath + "data/host.json");
-		try {
-			mapper.writerWithDefaultPrettyPrinter().writeValue(hostFile, 
-					hostList);
-		}
-		catch (JsonGenerationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			throw new JsonGenerationException("JSON generalizacija");
-		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			throw new JsonMappingException("mapiranje JSON");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			throw new IOException();
-		}
-		
-		//upisivanje gosta
-		File guestFile = new File(this.contextPath + "data/guest.json");
-		try {
-			mapper.writerWithDefaultPrettyPrinter().writeValue(guestFile, 
-					guestList);
-		}
-		catch (JsonGenerationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			throw new JsonGenerationException("JSON generalizacija");
-		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			throw new JsonMappingException("mapiranje JSON");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			throw new IOException();
-		}*/
 	}
+
+//	public void save() {
+//		ObjectMapper objectMapper = new ObjectMapper();
+//		try {
+//			objectMapper.writeValue(new File(this.path + "/users.json"), this.users);
+//		} catch (IOException e) {
+//		// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//}
 
 }
 

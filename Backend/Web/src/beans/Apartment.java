@@ -19,7 +19,6 @@ public class Apartment {
 	private List<Amenities> amenities;
 	private List<Reservation> reservations;
 	private Long id;
-	private List<String> stringImage;
 	
 	public Apartment() {
 		super();
@@ -28,7 +27,7 @@ public class Apartment {
 	public Apartment(ApartmentType apartmentType, Integer numberRooms, Integer guestNumber, Location location,
 			List<AvailableDate> appartmentDates, Host host, List<ApartmentComment> comments, String image,
 			double priceNight, Date checkIn, Date checkOut, boolean appStatus, List<Amenities> amenities,
-			List<Reservation> reservations, List<String> stringImage) {
+			List<Reservation> reservations) {
 		super();
 		this.apartmentType = apartmentType;
 		this.numberRooms = numberRooms;
@@ -44,15 +43,8 @@ public class Apartment {
 		this.appStatus = appStatus;
 		this.amenities = amenities;
 		this.reservations = reservations;
-		this.stringImage= stringImage;
 	}
 	
-	public List<String> getStringImage() {
-		return stringImage;
-	}
-	public void setStringImage(List<String> stringImage) {
-		this.stringImage = stringImage;
-	}
 	public Long getId() {
 		return id;
 	}

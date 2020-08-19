@@ -11,15 +11,6 @@ public class Reservation {
 	private String reservationMessage;
 	private Guest guest;
 	private ReservationStatus statusRes;
-	public Long Id;
-	
-	public long getId() {
-		return Id;
-	}
-	
-	public void setId(Long iD) {
-		Id=iD;
-	}
 	
 	
 	public Reservation(Apartment apartment, Date startDate, Integer numberNights, Double fullPrice,
