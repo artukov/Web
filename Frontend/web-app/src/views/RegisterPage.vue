@@ -94,7 +94,7 @@ export default {
       .then(form => {
         this.form = form.data;
         this.error = false;
-        this.$router.push("/");
+        this.$router.push("/home");
       })
       .catch(error => {
         this.errorMessage = "Bad credentials."
