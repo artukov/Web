@@ -10,24 +10,6 @@
         ></b-form-input>
       </b-form-group>
 
-      <b-form-group id="input-group-1" label="Password:" label-for="input-1">
-        <b-form-input
-          id="input-1"
-          v-model="form.password"
-          type="password"
-          required
-        ></b-form-input>
-      </b-form-group>
-
-      <b-form-group id="input-group-1" label="Confirm password:" label-for="input-1">
-        <b-form-input
-          id="input-1"
-          v-model="confirmPass"
-          type="password"
-          required
-        ></b-form-input>
-      </b-form-group>
-
       <b-form-group id="input-group-3" label="Name:" label-for="input-2">
         <b-form-input
           id="input-2"
@@ -39,7 +21,7 @@
       <b-form-group id="input-group-3" label="Lastname:" label-for="input-2">
         <b-form-input
           id="input-2"
-          v-model="form.lastname"
+          v-model="form.lastName"
           required
         ></b-form-input>
       </b-form-group>
@@ -73,19 +55,20 @@ export default {
   data() {
     return {
       form: {
-        username: "",
-        password: "",
-        name: "",
-        lastname: "",
-        gender: "",
-        role: "",
+        username: this.$store.state.user.data.username,
+        name: this.$store.state.user.data.name,
+        password: this.$store.state.user.data.password,
+        lastName: this.$store.state.user.data.lastName,
+        gender: this.$store.state.user.data.gender,
+        role: this.$store.state.user.data.role,
       },
-      genders: ["Male", "Female"],
+      genders: ["MALE", "FEMALE"],
       roles: ["GUEST", "HOST"],
       error: false,
       errorMessage: "",
       confirmPass: "",
-      info: ""
+      info: "",
+      loggedUser: ""
     };
   },
   methods: {
@@ -111,16 +94,13 @@ export default {
     },
 
     onSubmit() {
-      if(this.form.password != this.confirmPass) {
-        this.error = true;
-        this.errorMessage = "Password does not match!";
-        return;
-      }
-      axios.post("/Web/rest/changeUser", this.form)
+      axios.put("/Web/rest/modify", this.form)
         .then(form => {
           this.form = form.data;
           this.error = false;
           this.info = "User profile successfully changed.";
+          console.log("sadasd");
+          // location.reload();
         })
         .catch(error => {
           this.errorMessage = "Bad credentials."

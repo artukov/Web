@@ -55,7 +55,16 @@ export default {
         this.form.password = "";
         this.form.username = "";
         response;
-        this.$router.push("/home");
+        if(response.status == 404) {
+          console.log("nisce");
+        } else if(response.status == 200){
+          console.log("idemoo");
+          console.log(response);
+          this.$store.state.user = response;
+          this.$store.state.user.authority = response.role;
+          this.$router.push("/home");
+        }
+        // 
       })
       .catch(error => {
         this.errorMessage = "Bad credentials."

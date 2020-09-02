@@ -206,6 +206,12 @@ public class UserDAO {
 			users.remove(user.getUsername(), user);
 		}
 	}
+	
+	public void change(User user) {
+		if(users.containsKey(user.getUsername())) {
+			users.put(user.getUsername(),user);
+		}
+	}
 
 //	public void save() {
 //		ObjectMapper objectMapper = new ObjectMapper();

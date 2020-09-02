@@ -37,18 +37,18 @@ public class LoginService {
 	@Path("/login")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public User login(User user, @Context HttpServletRequest request) {
+	public Response login(User user, @Context HttpServletRequest request) {
 		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
 		
 		User loggedUser = userDao.find(user.getUsername(), user.getPassword());
 		System.out.println(loggedUser);
 		if (loggedUser== null) {
 			System.out.println("Nema takog");
-			return null;
+			return Response.status(404).build();
 		}
 		request.getSession().setAttribute("user", loggedUser);
 		System.out.println(userDao);
-		return loggedUser;
+		return Response.status(200).entity(loggedUser).build();
 	}
 	
 	@GET

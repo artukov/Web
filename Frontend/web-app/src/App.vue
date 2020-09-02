@@ -1,19 +1,32 @@
 <template>
   <div id="app">
     <div id="nav">
-      <router-link to="/home">Home</router-link>|
-      <router-link to="/about">About</router-link>|
-      <router-link to="/register">Register</router-link>|
-      <router-link to="/">Login</router-link>|
-      <router-link to="/profile">Profile</router-link>|
-      <b-nav-item-dropdown text="Sidebar" right>
-      <router-link to="/searchUsers">Search users</router-link>
-      </b-nav-item-dropdown>|
+      <b-navbar>
+        <b-navbar-nav>
+          <router-link to="/home">Home</router-link>|
+          <router-link to="/about">About</router-link>|
+          <router-link to="/register">Register</router-link>|
+          <router-link to="/">Login</router-link>|
+          <router-link to="/profile" v-if="this.authority == 'GUEST'">Profile</router-link>|
+          <b-nav-item-dropdown text="Sidebar" left>
+          <router-link to="/searchUsers">Search users</router-link>
+          </b-nav-item-dropdown>|
+        </b-navbar-nav>
+      </b-navbar>
     </div>
     <router-view />
   </div>
 </template>
 
+<script>
+export default {
+  data() {
+    return {
+      authority: this.$store.state.user.data.role
+    }
+  }
+}
+</script>
 
 
 <style lang="scss">
