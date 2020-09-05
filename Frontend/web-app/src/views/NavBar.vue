@@ -1,9 +1,5 @@
 <template>
-  <div id ="app">
-
-    <!-- <nav-bar></nav-bar>
-    <router-view/> -->
-
+  <div id="app">
 
 
     <div id="nav">
@@ -14,38 +10,30 @@
           <router-link to="/register">Register</router-link>|
           <router-link to="/">Login</router-link>|
           <router-link to="/profile" v-if="this.$store.state.user != null">Profile</router-link>|
-          <router-link to="/addApartment">Add apartment</router-link>
-          <router-link to="/apartments">Apartments</router-link>
-          <router-link to="/" @click="logout">Logout</router-link>|
+          <router-link to="/">Logout</router-link>|
           <b-nav-item-dropdown text="Sidebar" left>
           <router-link to="/searchUsers">Search users</router-link>
-          
-          
           </b-nav-item-dropdown>|
         </b-navbar-nav>
       </b-navbar>
     </div>
-    <router-view />
+    <div><button></button></div>
   </div>
+  
 </template>
 
 <script>
-import axios from "axios";
-// import NavBar from "@/components/NavBar.vue";
+// import axios from "axios";
 export default {
-  components: {
-    // "nav-bar" : NavBar
-  },
   data() {
     return {
       profileShow: false,
-      idemo: ''
+      user: ''
     }
   },
 
   mounted() {
       console.log("usao");
-      
       // if(this.$store.state.user.data.role == 'GUEST'){
       //   this.profileShow = true;
       // }
@@ -73,18 +61,6 @@ export default {
 
 
 
-  },
-  methods: {
-    logout() {
-      axios
-      .get("/Web/rest/logout")
-      .then(response => {
-        this.idemo = response.data;
-      })
-      .catch(error => {
-        console.log(error);
-      })
-    }
   }
 };
 </script>

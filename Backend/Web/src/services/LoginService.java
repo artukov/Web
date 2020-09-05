@@ -47,6 +47,7 @@ public class LoginService {
 			return Response.status(404).build();
 		}
 		request.getSession().setAttribute("user", loggedUser);
+		User newUser = (User) request.getSession().getAttribute("user");
 		System.out.println(userDao);
 		return Response.status(200).entity(loggedUser).build();
 	}
@@ -65,6 +66,7 @@ public class LoginService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public User currentUser(@Context HttpServletRequest request) {
+		User newUser = (User) request.getSession().getAttribute("user");
 		return (User) request.getSession().getAttribute("user");
 	}
 	

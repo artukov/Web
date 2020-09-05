@@ -5,6 +5,7 @@ public class Address {
 	private Integer number;
 	private String city;
 	private Integer postalCode;
+	private Long id;
 	
 	public Address() {
 		super();
@@ -17,6 +18,13 @@ public class Address {
 		this.number = number;
 		this.city = city;
 		this.postalCode = postalCode;
+	}
+	
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getStreet() {

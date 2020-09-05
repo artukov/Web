@@ -45,6 +45,7 @@
       </b-form-group>
 
       <b-button type="submit" variant="primary">Change profile</b-button>
+      <b-button @onClick="comeon()" variant="primary">Come on</b-button>
     </b-form>
   </div>
 </template>
@@ -68,11 +69,12 @@ export default {
       errorMessage: "",
       confirmPass: "",
       info: "",
-      loggedUser: ""
+      loggedUser: "",
+      proba: ""
     };
   },
-  methods: {
-    mounted() {
+
+  mounted() {
     //   var user = {
     //     username: this.form.name,
     //     password: this.form.password,
@@ -81,17 +83,29 @@ export default {
     //     name: this.form.name,
     //     lastname: this.form.lastname,
     //   };
-      axios.get("/Web/rest/currentUser", this.form)
-      .then(form => {
-        this.form = form.data;
-        this.error = false;
+      axios
+      .get("/Web/rest/currentUser")
+      .then(response => {
+        this.proba = response.data;
       })
       .catch(error => {
-        this.errorMessage = "Bad credentials."
-        this.error = true;
-        error;
+        console.log(error);
+      })
+  },
+
+  methods: {
+
+    comeon() {
+      axios
+      .get("/Web/rest/currentUser")
+      .then(response => {
+        this.proba = response.data;
+      })
+      .catch(error => {
+        console.log(error);
       })
     },
+    
 
     onSubmit() {
       axios.put("/Web/rest/modify", this.form)
