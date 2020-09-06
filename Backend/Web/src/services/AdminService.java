@@ -19,6 +19,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import beans.Address;
 import beans.GenderEnum;
 import beans.User;
 import beans.UserRole;
@@ -151,6 +152,16 @@ public class AdminService {
 		Collection<User> users = userDao.getUsers().values();
 		return users;
 	}
+	
+	
+//	@GET
+//	@Path("/locations")
+//	@Consumes(MediaType.APPLICATION_JSON)
+//	@Produces(MediaType.APPLICATION_JSON)
+//	public Response getLocations(@Context HttpServletRequest request) {
+//		Address adresa = new Address("ldkasj",2,"Novi Sad",21000);
+//		return Response.status(200).entity(adresa).build(); 
+//	}
 	
 	
 }
