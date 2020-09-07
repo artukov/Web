@@ -4,7 +4,6 @@ public class Location {
 	private Double longitude;
 	private Double latitude;
 	private Address address;
-	private Long id;
 	public Location() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -15,12 +14,12 @@ public class Location {
 		this.latitude = latitude;
 		this.address = address;
 	}
-	public Long getId() {
-		return id;
-	}
-	public void setId(Long id) {
-		this.id = id;
-	}
+//	public Long getId() {
+//		return id;
+//	}
+//	public void setId(Long id) {
+//		this.id = id;
+//	}
 	public Double getLongitude() {
 		return longitude;
 	}

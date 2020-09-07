@@ -2,6 +2,7 @@ package services;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -44,12 +45,15 @@ public class LocationService {
 		if(ctx.getAttribute("userDAO") == null) {
 			this.ctx.setAttribute("userDAO", new UserDAO(this.ctx.getRealPath("/")));
 		}
-//		if(ctx.getAttribute("locationDAO") == null) {
-//			this.ctx.setAttribute("locationDAO", new LocationDAO(this.ctx.getRealPath("/")));
-//		}
-		if(ctx.getAttribute("reservationDAO") == null) {
-			this.ctx.setAttribute("reservationDAO", new ReservationDAO(this.ctx.getRealPath("/")));
+		if(ctx.getAttribute("locationDAO") == null) {
+			this.ctx.setAttribute("locationDAO", new LocationDAO(this.ctx.getRealPath("/")));
 		}
+		if(ctx.getAttribute("addressDAO") == null) {
+			this.ctx.setAttribute("addressDAO", new AddressDAO(this.ctx.getRealPath("/")));
+		}
+//		if(ctx.getAttribute("reservationDAO") == null) {
+//			this.ctx.setAttribute("reservationDAO", new ReservationDAO(this.ctx.getRealPath("/")));
+//		}
 //		if(ctx.getAttribute("addressDAO") == null) {
 //			String contextPath = ctx.getRealPath("");
 //			ctx.setAttribute("addressDAO", new AddressDAO(contextPath));
@@ -68,34 +72,72 @@ public class LocationService {
 //	}
 	
 	
-//	@GET
-//	@Path("/locations")
-//	@Consumes(MediaType.APPLICATION_JSON)
-//	@Produces(MediaType.APPLICATION_JSON)
-//	public Response getLocations(@Context HttpServletRequest request) {
-//		LocationDAO locationDAO = (LocationDAO) ctx.getAttribute("locationDAO");
-////		User korisnik = new User("uganda", "sifra", "Bojan", "Simeunoviski", GenderEnum.MALE, UserRole.GUEST);
-////		User korisnik2 = new User("peru", "sifra", "Nikola", "Artukov", GenderEnum.MALE, UserRole.ADMIN);
-//		Address adresa = new Address("Marka miljanova", 5, "Novi Sad", 21000);
-//		Location loca1 = new Location((double)10,(double)10, adresa);
-//		String contextPath = ctx.getRealPath("");
-////		userDao.dodaj(korisnik,contextPath);
-////		userDao.dodaj(korisnik2, contextPath);
-//		locationDAO.putLocation(loca1);
-//		//		userDao.add(korisnik);
-//		Collection<Location> locations = locationDAO.getLocations().values();
-//		return Response.status(200).entity(locations).build();
-//	}
-	
 	@GET
 	@Path("/locations")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getLocations(@Context HttpServletRequest request) {
-		Address adresa = new Address("ldkasj",2,"Novi Sad",21000);
-		Location loca1 = new Location((double)10,(double)10,adresa);
-		return Response.status(200).entity(loca1).build(); 
+		LocationDAO locationDAO = (LocationDAO) ctx.getAttribute("locationDAO");
+//		User korisnik = new User("uganda", "sifra", "Bojan", "Simeunoviski", GenderEnum.MALE, UserRole.GUEST);
+//		User korisnik2 = new User("peru", "sifra", "Nikola", "Artukov", GenderEnum.MALE, UserRole.ADMIN);
+		Address adresa = new Address("Marka miljanova", 5, "Novi Sad", 21000);
+		Location loca1 = new Location((double)10,(double)10, adresa);
+		Location loca2 = new Location((double)20,(double)42,adresa);
+		String contextPath = ctx.getRealPath("");
+//		userDao.dodaj(korisnik,contextPath);
+//		userDao.dodaj(korisnik2, contextPath);
+		
+		
+//		String str = String.valueOf(1);
+//		HashMap has = new HashMap();
+//		has.put(str, loca1);
+//		
+//		String str2 = String.valueOf(2);
+//		has.put(str2, loca2);
+//		
+//		
+//		locationDAO.dodajuFile(has, contextPath);
+
+
+		locationDAO.dodaj(loca1, contextPath);
+		locationDAO.dodaj(loca2, contextPath);
+		
+		
+		Collection<Location> locations = locationDAO.getLocations().values();
+		return Response.status(200).entity(locations).build();
 	}
+	
+	
+	@GET
+	@Path("/addresses")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getAddresses(@Context HttpServletRequest request) {
+		AddressDAO addressDAO = (AddressDAO) ctx.getAttribute("addressDAO");
+//		User korisnik = new User("uganda", "sifra", "Bojan", "Simeunoviski", GenderEnum.MALE, UserRole.GUEST);
+//		User korisnik2 = new User("peru", "sifra", "Nikola", "Artukov", GenderEnum.MALE, UserRole.ADMIN);
+		Address adresa1 = new Address("Marka miljanova", 5, "Novi Sad", 21000);
+		Address adresa2 = new Address("Kosovska", 30, "Novi Sad", 21000);
+		String contextPath = ctx.getRealPath("");
+//		userDao.dodaj(korisnik,contextPath);
+//		userDao.dodaj(korisnik2, contextPath);
+		addressDAO.dodaj(adresa1, contextPath);
+		addressDAO.dodaj(adresa2, contextPath);
+//		locationDAO.dodaj(loca1, contextPath);
+		//		userDao.add(korisnik);
+		Collection<Address> addresses = addressDAO.getAddresss().values();
+		return Response.status(200).entity(addresses).build();
+	}
+	
+//	@GET
+//	@Path("/locations")
+//	@Consumes(MediaType.APPLICATION_JSON)
+//	@Produces(MediaType.APPLICATION_JSON)
+//	public Response getLocations(@Context HttpServletRequest request) {
+//		Address adresa = new Address("ldkasj",2,"Novi Sad",21000);
+//		Location loca1 = new Location((double)10,(double)10,adresa);
+//		return Response.status(200).entity(loca1).build(); 
+//	}
 	
 	
 //	@GET
