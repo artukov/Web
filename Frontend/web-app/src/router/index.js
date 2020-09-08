@@ -5,6 +5,7 @@ import RegisterPage from "../views/RegisterPage.vue";
 import LoginPage from "../views/LoginPage.vue";
 import ProfilePage from "../views/ProfilePage.vue";
 import SearchUsers from "../views/SearchUsers.vue";
+import AddApartment from "../views/AddApartment.vue";
 
 Vue.use(VueRouter);
 
@@ -42,7 +43,12 @@ const routes = [
     path: "/searchUsers",
     name: "SearchUsers",
     component: SearchUsers,
-  }
+  },
+  {
+    path: '/addApartment',
+    name: 'add-apartment-ad',
+    component: AddApartment
+  },
 ];
 
 const router = new VueRouter({

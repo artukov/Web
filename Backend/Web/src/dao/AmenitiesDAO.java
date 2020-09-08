@@ -1,142 +1,237 @@
 package dao;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
-import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import beans.Amenities;
 
 public class AmenitiesDAO {
 
-	private Map<Long,Amenities> amenities= new HashMap<>(); 
-	private String contextPath;
+	private HashMap<String, Amenities> amenitiess = new HashMap<>();
 	
-	public AmenitiesDAO() {
+	private AmenitiesDAO() {
+		
 		
 	}
-	
 	public AmenitiesDAO(String contextPath) {
-		this.contextPath = contextPath;
-		
-		try {
-			loadAmenities();
-		} catch (JsonParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		loadAmenitiess(contextPath);
 	}
 	
-	private void loadAmenities() throws IOException {
-		// TODO Auto-generated method stub
-		ObjectMapper mapper = new ObjectMapper();
-		BufferedReader br = null;
-		File amenitiesFile = new File(this.contextPath + "data/amenities.json");
-		StringBuilder json = new StringBuilder();
-		String line;
-		
-		try {
-			br = new BufferedReader(new FileReader(amenitiesFile));
-			while ((line = br.readLine()) != null) {
-				json.append(line);
-			}
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		finally {
-			br.close();
-		}
-		
-		List<Amenities> amenitiesList = mapper.readValue(json.toString(),
-				new TypeReference<ArrayList<Amenities>>() {
-				});
-		this.amenities.clear();
-		for(Amenities iter : amenitiesList) {
-			this.amenities.put(iter.getId(), iter);
-		}
-		
+//	public Amenities find(String amenitiesname,String password) {
+//		if (!amenitiess.containsKey(amenitiesname)) {
+//			return null;
+//		}
+//		Amenities amenities = amenitiess.get(amenitiesname);
+//		if (!amenities.getPassword().equals(password)) {
+//			return null;
+//		}
+//		return amenities;
+//	}
+	public HashMap<String, Amenities> getAmenitiess() {
+		return amenitiess;
+	}
+
+	public void setAmenitiess(HashMap<String, Amenities> amenitiess) {
+		this.amenitiess = amenitiess;
 	}
 	
-	public  void saveAmenities() throws JsonGenerationException, JsonMappingException, IOException {
-		ObjectMapper mapper = new ObjectMapper();
-		File amenitiesFile = new File(this.contextPath + "data/amenities.json");
+	public boolean find(String amenitiesname) {
+		if (!amenitiess.containsKey(amenitiesname)) {
+			return false;
+		}
 		
-		mapper.writerWithDefaultPrettyPrinter().writeValue(amenitiesFile, 
-				this.amenities.values());
+		return true;
 	}
 	
-	public Amenities findById(Long id) {
-		Amenities amenity = this.amenities.get(id);
-		if(amenity == null) {
+	public Amenities searchAmenitiess(String u) {
+		if (!amenitiess.containsKey(u)) {
 			return null;
 		}
-		
-		return amenity;
-	}
+		Amenities amenities = amenitiess.get(u);
 	
-	public Collection<Amenities> findAll(){
-		return this.amenities.values();
-	}
-
-	public Map<Long, Amenities> getAmenities() {
 		return amenities;
 	}
-
-	public void setAmenities(Map<Long, Amenities> amenities) {
-		this.amenities = amenities;
-	}
-
-	public String getContextPath() {
-		return contextPath;
-	}
-
-	public void setContextPath(String contextPath) {
-		this.contextPath = contextPath;
+	
+	public Collection<Amenities> findAll() {
+		return amenitiess.values();
 	}
 	
-	public void putAmenities(Amenities amenities) {
-		// TODO Auto-generated method stub
-		List<Amenities> list = (List<Amenities>) this.amenities.values();
-		
-		list.sort((a,b) -> Long.compare(b.getId(), a.getId()));
-		
-		Long maxId = list.get(0).getId();
-		amenities.setId(++maxId);
-		
-		this.amenities.put(amenities.getId(), amenities);
+	public void dodaj(Amenities u, String contextPath)
+	{
+				
+		try
+		{
+			File file = new File(contextPath + "/amenitiess.json");
+			System.out.println(contextPath);
+			ObjectMapper objectMapper = new ObjectMapper();
+			objectMapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
+			objectMapper.configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true);
+			ArrayList<Amenities> proba=new ArrayList<>();
+			//proba.add(new amenities("pera","pera","Petar","Petrovic",0,"06055555","fasf@casc.com", "08-09-1995"));
+			//proba.add(new amenities("jov","jov","jovana","jov",0,"0605020313","asfa@gmail.com", "06-06-1985"));
+			//objectMapper.writeValue(new File(contextPath + "/amenitiess.json"), proba);
+			
+			Amenities[] car = objectMapper.readValue(file, Amenities[].class);
+			System.out.println("register Amenities: "+car);
+			
+			//objectMapper.writeValue(new File(contextPath + "/proba.json"), new amenities("asfas","joasfasv","jov","jov",0,"jov","jov", "jov"));
+			
+			for(Amenities g : car)
+			{
+				proba.add(g);
+			}
+			proba.sort((a,b) -> Long.compare(b.getId(), a.getId()));
+			Long maxId = proba.get(0).getId();
+			u.setId(++maxId);
+			proba.add(u);  //sve koji su bili + novi, mapa i fajl moraju biti uskladjeni
+			objectMapper.writeValue(new File(contextPath + "/amenitiess.json"), proba);
+			String str = String.valueOf(u.getId());
+			Amenities r=amenitiess.put(str, u);
+			
+			System.out.println(amenitiess);
+			
+		}
+		catch (Exception ex) {
+			System.out.println(ex);
+			ex.printStackTrace();
+		} finally {
+			
+		}
+		String str = String.valueOf(u.getId());
+		this.amenitiess.put(str,u);
 		
 	}
-	public void modifyAmenity(Amenities amenities) {
+	
+	
+	private void loadAmenitiess(String contextPath) {
+		try
+		{
+			File file = new File(contextPath + "/amenitiess.json");
+			System.out.println(contextPath);
+			ObjectMapper objectMapper = new ObjectMapper();
+			objectMapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true); //nebitno, kopiramo
+			objectMapper.configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true);
+			
+			
+			ArrayList<Amenities> proba=new ArrayList<>();
+			
+			//OVO JE ZA DEFAULT VREDNOSTI, napravi sve sama pred projekat i zakomentarisi ovo
+			//proba.add(new amenities("pera","pera","Petar","Petrovic",0,"06055555","fasf@casc.com", "08-09-1995"));
+			//proba.add(new amenities("jov","jov","jovana","jov",1,"0605020313","asfa@gmail.com", "06-06-1985"));
+			//objectMapper.writeValue(new File(contextPath + "/amenitiess.json"), proba);
+			
+			
+			Amenities[] car = objectMapper.readValue(file, Amenities[].class);
+			System.out.println("load Amenities: "+car);
+			
+			//objectMapper.writeValue(new File(contextPath + "/proba.json"), new amenities("asfas","joasfasv","jov","jov",0,"jov","jov", "jov"));
+			
+			for(Amenities u : car)
+			{
+				String str = String.valueOf(u.getId());
+				amenitiess.put(str,u);
+			}
+			
+			System.out.println(amenitiess);
+			
+		}
+		catch (Exception ex) {
+			System.out.println(ex);
+			ex.printStackTrace();
+		} finally {
+			
+		}
+	}
+	@Override
+	public String toString() {
+		return "AmenitiesDAO [amenitiess=" + amenitiess + "]";
+	}
+	
+	public void stavi(Amenities restoran) {
 		// TODO Auto-generated method stub
-		this.amenities.put(amenities.getId(), amenities);
+		String str = String.valueOf(restoran.getId());
+		amenitiess.put(str, restoran);
 		
+	}
+	
+	public void dodajuFile(HashMap<String, Amenities> amenitiess, String contextPath)
+	{
+				
+		try
+		{
+			File file = new File(contextPath + "/amenitiess.json");
+			System.out.println(contextPath);
+			ObjectMapper objectMapper = new ObjectMapper();
+			objectMapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
+			objectMapper.configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true);
+			objectMapper.configure(DeserializationFeature.ACCEPT_EMPTY_ARRAY_AS_NULL_OBJECT, true);
+
+			ArrayList<Amenities> proba=new ArrayList<>();
+			
+					
+			for(Amenities g : amenitiess.values())
+			{
+				proba.add(g);
+			}
+			objectMapper.writeValue(new File(contextPath + "/amenitiess.json"), proba);
+			
+			System.out.println(amenitiess +" u file");
+			
+		}
+		catch (Exception ex) {
+			System.out.println(ex);
+			ex.printStackTrace();
+		} finally {
+			
+		}
+	}
+	
+	
+	
+	
+	
+	public Amenities add(Amenities amenities) {
+		
+		if (!amenitiess.containsKey(amenities.getId())) {
+			String str = String.valueOf(amenities.getId());
+			amenitiess.put(str, amenities);
+			return amenitiess.get(amenities.getId());
+		}
+		
+		return null;
 	}
 
-	public void deleteAmenity(Long id) {
-		// TODO Auto-generated method stub
-		
-		this.amenities.remove(id);
-		
+	
+	public void remove(Amenities amenities) {
+		if (amenitiess.containsKey(amenities.getId())) {
+			amenitiess.remove(amenities.getId(), amenities);
+		}
 	}
 	
-	
+	public void change(Amenities amenities) {
+		if(amenitiess.containsKey(amenities.getId())) {
+			String str = String.valueOf(amenities.getId());
+			amenitiess.put(str,amenities);
+		}
+	}
+
+//	public void save() {
+//		ObjectMapper objectMapper = new ObjectMapper();
+//		try {
+//			objectMapper.writeValue(new File(this.path + "/amenitiess.json"), this.amenitiess);
+//		} catch (IOException e) {
+//		// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//}
+
 }
+
+
+

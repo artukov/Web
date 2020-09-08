@@ -81,7 +81,7 @@ public class RegisterService {
 	@Path("/register")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public User register(User user, @Context HttpServletRequest request) { //vidi dal user ili response pa sta onda
+	public Response register(User user, @Context HttpServletRequest request) { //vidi dal user ili response pa sta onda
 		System.out.print("ajmooo");
 		System.out.println(user);
 		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
@@ -89,24 +89,24 @@ public class RegisterService {
 		User userLog = userDao.find(user.getUsername(), user.getPassword());
 		System.out.println(loggedUser+"register klasa");
 		if (loggedUser== true) {
-			//return Response.status(400).entity("Korisnicko ime vec postoji!").build();
-			System.out.println("Idemoo");
-			return null;
+			return Response.status(400).entity("Korisnicko ime vec postoji!").build();
+//			System.out.println("Idemoo");
+//			return null;
 		}
 		
 		boolean ime=isValidExpression(user.getName());
 		boolean prezime=isValidExpression(user.getLastName());
 		
 		
-		if(!ime) return null;;
-		if(!prezime) return null;;
+		if(!ime) return Response.status(404).build();
+		if(!prezime) Response.status(404).build();
 		
 		
 		String contextPath = ctx.getRealPath("");
 		userDao.dodaj(user,contextPath);
 		System.out.println(userDao);
 		
-		return userLog;
+		return Response.status(200).entity(userLog).build();
 	}
 	
 	

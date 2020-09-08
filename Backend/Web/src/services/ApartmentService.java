@@ -24,6 +24,7 @@ import beans.Apartment;
 import beans.ApartmentComment;
 import beans.Guest;
 import beans.Host;
+import beans.Location;
 import dao.ApartmentDAO;
 import dao.UserDAO;
 
