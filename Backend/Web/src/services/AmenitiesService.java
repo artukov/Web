@@ -1,6 +1,7 @@
 package services;
 
 import java.io.IOException;
+import java.util.Collection;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
@@ -38,9 +39,9 @@ public class AmenitiesService {
 		if(this.ctx.getAttribute("amenitiesDAO") == null) {
 			this.ctx.setAttribute("amenitiesDAO", new AmenitiesDAO(this.ctx.getRealPath("/")));
 		}
-		if(this.ctx.getAttribute("apartmentDAO") == null) {
-			this.ctx.setAttribute("apartmentDAO", new ApartmentDAO(this.ctx.getRealPath("/")));
-		}
+//		if(this.ctx.getAttribute("apartmentDAO") == null) {
+//			this.ctx.setAttribute("apartmentDAO", new ApartmentDAO(this.ctx.getRealPath("/")));
+//		}
 	}
 	
 	@GET
@@ -48,14 +49,45 @@ public class AmenitiesService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getAllAmenities( @Context HttpServletRequest request) {
 		User admin = (User) request.getSession().getAttribute("user");
-		if(admin.getRole() != UserRole.ADMIN) {
-			return Response.status(403).entity("Sami admin ima pristup").build();
-		}
+//		if(admin.getRole() != UserRole.ADMIN) {
+//			return Response.status(403).entity("Sami admin ima pristup").build();
+//		}
+		AmenitiesDAO amenitiesDao = (AmenitiesDAO) this.ctx.getAttribute("amenitiesDAO");
+		Amenities amenity = new Amenities("Pansion");
+		Amenities amenity2 = new Amenities("Polu");
+		String contextPath = ctx.getRealPath("");
+		amenitiesDao.dodaj(amenity, contextPath);
+		amenitiesDao.dodaj(amenity2, contextPath);
 		
-		AmenitiesDAO dao = (AmenitiesDAO) this.ctx.getAttribute("amenitiesDAO");
-		return Response.status(200).entity(dao.findAll()).build();
+		Collection<Amenities> amenitiess = amenitiesDao.getAmenitiess().values();
+		return Response.status(200).entity(amenitiess).build();
 		
 	}
+	
+//	@POST
+//	@Path("/new")
+//	@Consumes(MediaType.APPLICATION_JSON)
+//	public Response createNewAmenity(Amenities amenities, @Context HttpServletRequest request) {
+//		User admin = (User) request.getSession().getAttribute("user");
+//		if(admin.getRole() != UserRole.ADMIN) {
+//			return Response.status(403).entity("Samo admin ima dozvolu").build();
+//		}
+//		
+//		AmenitiesDAO dao = (AmenitiesDAO) this.ctx.getAttribute("amenitiesDAO");
+//		dao.putAmenities(amenities);
+//		
+//		try {
+//			dao.saveAmenities();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//			return Response.status(500).entity("nije sacuvano,GRESKA").build();
+//		}
+//		
+//		return Response.status(200).build();
+//		
+//	}
+	
 	
 	@POST
 	@Path("/new")
@@ -66,76 +98,77 @@ public class AmenitiesService {
 			return Response.status(403).entity("Samo admin ima dozvolu").build();
 		}
 		
-		AmenitiesDAO dao = (AmenitiesDAO) this.ctx.getAttribute("amenitiesDAO");
-		dao.putAmenities(amenities);
+		AmenitiesDAO amenitiesDAO = (AmenitiesDAO) this.ctx.getAttribute("amenitiesDAO");
+		String contextPath = ctx.getRealPath("");
+		amenitiesDAO.dodaj(amenities,contextPath);
 		
-		try {
-			dao.saveAmenities();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return Response.status(500).entity("nije sacuvano,GRESKA").build();
-		}
+//		try {
+//			amenitiesDAO.saveAmenities();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//			return Response.status(500).entity("nije sacuvano,GRESKA").build();
+//		}
 		
-		return Response.status(200).build();
-		
-	}
-	
-	@PUT
-	@Path("/modify")
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Response modifyAmenity(Amenities amenities, @Context HttpServletRequest request) {
-		User admin = (User) request.getSession().getAttribute("user");
-		if(admin.getRole() != UserRole.ADMIN) {
-			return Response.status(403).entity("Nije dozvoljeno za druge osim za admine").build();
-		}
-		
-		AmenitiesDAO dao = (AmenitiesDAO) this.ctx.getAttribute("amenitiesDAO");
-		
-		dao.modifyAmenity(amenities);
-		
-		
-		try {
-			dao.saveAmenities();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return Response.status(500).entity("Greska u cuvanju izmjenjenog sadrzaja apartmana").build();
-		}
-		
-		ApartmentDAO apDAO = (ApartmentDAO) this.ctx.getAttribute("apartmentDAO");
-		apDAO.modifyApartmentsWithAmenity(amenities);
-		
-		
-		return Response.status(200).build();
+		return Response.status(200).entity(amenities).build();
 		
 	}
 	
-	@DELETE
-	@Path("/delete/{id}")
-	public Response deleteAmenity(@PathParam("id") Long id, @Context HttpServletRequest request) {
-		
-		User admin = (User) request.getSession().getAttribute("user");
-		if(admin.getRole() != UserRole.ADMIN) {
-			return Response.status(403).entity("Nije dozvoljeno za druge osim za admine").build();
-		}
-		
-		AmenitiesDAO dao = (AmenitiesDAO) this.ctx.getAttribute("amenitiesDAO");
-		
-		dao.deleteAmenity(id);
-		
-		try {
-			dao.saveAmenities();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return Response.status(500).entity("Greska u cuvanju izmjenjenog sadrzaja apartmana").build();
-		}
-		
-		ApartmentDAO apDAO = (ApartmentDAO) this.ctx.getAttribute("apartmentDAO");
-		apDAO.deleteAmenityFromApartment(dao.findById(id));
-		
-		
-		return Response.status(200).build();
-	}
+//	@PUT
+//	@Path("/modify")
+//	@Consumes(MediaType.APPLICATION_JSON)
+//	public Response modifyAmenity(Amenities amenities, @Context HttpServletRequest request) {
+//		User admin = (User) request.getSession().getAttribute("user");
+//		if(admin.getRole() != UserRole.ADMIN) {
+//			return Response.status(403).entity("Nije dozvoljeno za druge osim za admine").build();
+//		}
+//		
+//		AmenitiesDAO dao = (AmenitiesDAO) this.ctx.getAttribute("amenitiesDAO");
+//		
+//		dao.modifyAmenity(amenities);
+//		
+//		
+//		try {
+//			dao.saveAmenities();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//			return Response.status(500).entity("Greska u cuvanju izmjenjenog sadrzaja apartmana").build();
+//		}
+//		
+//		ApartmentDAO apDAO = (ApartmentDAO) this.ctx.getAttribute("apartmentDAO");
+//		apDAO.modifyApartmentsWithAmenity(amenities);
+//		
+//		
+//		return Response.status(200).build();
+//		
+//	}
+//	
+//	@DELETE
+//	@Path("/delete/{id}")
+//	public Response deleteAmenity(@PathParam("id") Long id, @Context HttpServletRequest request) {
+//		
+//		User admin = (User) request.getSession().getAttribute("user");
+//		if(admin.getRole() != UserRole.ADMIN) {
+//			return Response.status(403).entity("Nije dozvoljeno za druge osim za admine").build();
+//		}
+//		
+//		AmenitiesDAO dao = (AmenitiesDAO) this.ctx.getAttribute("amenitiesDAO");
+//		
+//		dao.deleteAmenity(id);
+//		
+//		try {
+//			dao.saveAmenities();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//			return Response.status(500).entity("Greska u cuvanju izmjenjenog sadrzaja apartmana").build();
+//		}
+//		
+//		ApartmentDAO apDAO = (ApartmentDAO) this.ctx.getAttribute("apartmentDAO");
+//		apDAO.deleteAmenityFromApartment(dao.findById(id));
+//		
+//		
+//		return Response.status(200).build();
+//	}
 }

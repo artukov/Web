@@ -61,7 +61,7 @@ export default {
           console.log("idemoo");
           console.log(response);
           this.$store.state.user = response;
-          this.$store.state.user.authority = response.role;
+          this.$store.state.role = this.$store.state.user.data.role;
           this.$router.push("/home");
         }
         // 

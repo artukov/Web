@@ -11,26 +11,29 @@
         <b-navbar-nav>
           <router-link to="/home">Home</router-link>|
           <router-link to="/about">About</router-link>|
-          <router-link to="/register">Register</router-link>|
-          <router-link to="/">Login</router-link>|
+          <router-link to="/register" v-if="this.$store.state.user == null">Register</router-link>|
+          <router-link to="/" v-if="this.$store.state.role != 'GUEST'">Login</router-link>|
           <router-link to="/profile" v-if="this.$store.state.user != null">Profile</router-link>|
-          <router-link to="/addApartment">Add apartment</router-link>
-          <router-link to="/apartments">Apartments</router-link>
-          <router-link to="/" @click="logout">Logout</router-link>|
+          <router-link to="/addApartment">Add apartment</router-link>|
+          <router-link to="/apartments">Apartments</router-link>|
+          <router-link to="/" @click="logout" v-if="this.$store.state.user != null">Logout</router-link>|
+          
           <b-nav-item-dropdown text="Sidebar" left>
           <router-link to="/searchUsers">Search users</router-link>
           
           
           </b-nav-item-dropdown>|
         </b-navbar-nav>
+        <button id="dugme" @click="logout" v-if="this.$store.state.user != null"><b>Logout</b></button>
       </b-navbar>
+      
     </div>
     <router-view />
   </div>
 </template>
 
 <script>
-import axios from "axios";
+// import axios from "axios";
 // import NavBar from "@/components/NavBar.vue";
 export default {
   components: {
@@ -45,6 +48,12 @@ export default {
 
   mounted() {
       console.log("usao");
+
+      if(this.$store.state.user == null) {
+        console.log("nije logovan");
+      } else {
+        console.log("jeste logovan");
+      }
       
       // if(this.$store.state.user.data.role == 'GUEST'){
       //   this.profileShow = true;
@@ -76,14 +85,10 @@ export default {
   },
   methods: {
     logout() {
-      axios
-      .get("/Web/rest/logout")
-      .then(response => {
-        this.idemo = response.data;
-      })
-      .catch(error => {
-        console.log(error);
-      })
+      this.$store.state.user = null;
+      this.$store.state.role = "";
+      window.location.reload(true);
+      console.log("logout");
     }
   }
 };
@@ -120,5 +125,15 @@ export default {
       color: #42b983;
     }
   }
+}
+
+#dugme {
+  padding: 0px;
+  margin: 0px;
+  background-color: Transparent;
+    background-repeat:no-repeat;
+    border: none;
+    cursor:pointer;
+    overflow: hidden;
 }
 </style>

@@ -4,6 +4,7 @@ public class Location {
 	private Double longitude;
 	private Double latitude;
 	private Address address;
+//	private Long id;
 	public Location() {
 		super();
 		// TODO Auto-generated constructor stub
