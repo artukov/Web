@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.UUID;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -86,9 +87,12 @@ public class AmenitiesDAO {
 			{
 				proba.add(g);
 			}
-			proba.sort((a,b) -> Long.compare(b.getId(), a.getId()));
-			Long maxId = proba.get(0).getId();
-			u.setId(++maxId);
+//			proba.sort((a,b) -> Long.compare(b.getId(), a.getId()));
+//			Long maxId = proba.get(0).getId();
+//			u.setId(++maxId);
+//			UUID id = UUID.randomUUID();
+//			Long longId = Long.valueOf(id);
+//			u.setId(id);
 			proba.add(u);  //sve koji su bili + novi, mapa i fajl moraju biti uskladjeni
 			objectMapper.writeValue(new File(contextPath + "/amenitiess.json"), proba);
 			String str = String.valueOf(u.getId());
@@ -153,12 +157,12 @@ public class AmenitiesDAO {
 		return "AmenitiesDAO [amenitiess=" + amenitiess + "]";
 	}
 	
-	public void stavi(Amenities restoran) {
-		// TODO Auto-generated method stub
-		String str = String.valueOf(restoran.getId());
-		amenitiess.put(str, restoran);
-		
-	}
+//	public void stavi(Amenities restoran) {
+//		// TODO Auto-generated method stub
+//		String str = String.valueOf(restoran.getId());
+//		amenitiess.put(str, restoran);
+//		
+//	}
 	
 	public void dodajuFile(HashMap<String, Amenities> amenitiess, String contextPath)
 	{
@@ -196,30 +200,30 @@ public class AmenitiesDAO {
 	
 	
 	
-	public Amenities add(Amenities amenities) {
-		
-		if (!amenitiess.containsKey(amenities.getId())) {
-			String str = String.valueOf(amenities.getId());
-			amenitiess.put(str, amenities);
-			return amenitiess.get(amenities.getId());
-		}
-		
-		return null;
-	}
-
-	
-	public void remove(Amenities amenities) {
-		if (amenitiess.containsKey(amenities.getId())) {
-			amenitiess.remove(amenities.getId(), amenities);
-		}
-	}
-	
-	public void change(Amenities amenities) {
-		if(amenitiess.containsKey(amenities.getId())) {
-			String str = String.valueOf(amenities.getId());
-			amenitiess.put(str,amenities);
-		}
-	}
+//	public Amenities add(Amenities amenities) {
+//		
+//		if (!amenitiess.containsKey(amenities.getId())) {
+//			String str = String.valueOf(amenities.getId());
+//			amenitiess.put(str, amenities);
+//			return amenitiess.get(amenities.getId());
+//		}
+//		
+//		return null;
+//	}
+//
+//	
+//	public void remove(Amenities amenities) {
+//		if (amenitiess.containsKey(amenities.getId())) {
+//			amenitiess.remove(amenities.getId(), amenities);
+//		}
+//	}
+//	
+//	public void change(Amenities amenities) {
+//		if(amenitiess.containsKey(amenities.getId())) {
+//			String str = String.valueOf(amenities.getId());
+//			amenitiess.put(str,amenities);
+//		}
+//	}
 
 //	public void save() {
 //		ObjectMapper objectMapper = new ObjectMapper();

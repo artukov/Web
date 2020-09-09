@@ -2,6 +2,7 @@ package services;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.UUID;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;

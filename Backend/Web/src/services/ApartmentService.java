@@ -1,6 +1,8 @@
 package services;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -22,9 +24,11 @@ import javax.ws.rs.core.Response;
 import beans.Admin;
 import beans.Apartment;
 import beans.ApartmentComment;
+import beans.AvailableDate;
 import beans.Guest;
 import beans.Host;
 import beans.Location;
+import beans.Reservation;
 import dao.ApartmentDAO;
 import dao.UserDAO;
 
@@ -68,118 +72,154 @@ public class ApartmentService {
 		ApartmentDAO apDAO = (ApartmentDAO)this.ctx.getAttribute("apartmentDAO");
 		Admin admin = (Admin) request.getSession().getAttribute("user");
 		
-		if(admin == null) {
-			return Response.status(403).build();
-		}
+//		if(admin == null) {
+//			return Response.status(403).build();
+//		}
+		Collection<Apartment> apartments = apDAO.getApartments().values();
 		
-		return Response.ok().entity(apDAO.findAll()).build();
+		return Response.ok().entity(apartments).build();
 	}
 	
-	@GET
-	@Path("/hostAll/{hostUsername}")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response getAllHostApartments(@Context HttpServletRequest request, 
-			@PathParam("hostUsername") String hostUsername) {
-		UserDAO dao = (UserDAO)this.ctx.getAttribute("userDAO");
-		Host host = (Host)dao.searchUsers(hostUsername);
-		
-		if(host == null) {
-			return Response.status(400).entity("Pogresan korisnika").build();
-		}
-		
-		ApartmentDAO apDAO = (ApartmentDAO)this.ctx.getAttribute("apartmentDAO");
-		
-		return Response.status(200).entity(apDAO.findAllHostApartments(host)).build(); 
-		
-	}
+//	@GET
+//	@Path("/hostAll/{hostUsername}")
+//	@Consumes(MediaType.APPLICATION_JSON)
+//	@Produces(MediaType.APPLICATION_JSON)
+//	public Response getAllHostApartments(@Context HttpServletRequest request, 
+//			@PathParam("hostUsername") String hostUsername) {
+//		UserDAO dao = (UserDAO)this.ctx.getAttribute("userDAO");
+//		Host host = (Host)dao.searchUsers(hostUsername);
+//		
+//		if(host == null) {
+//			return Response.status(400).entity("Pogresan korisnika").build();
+//		}
+//		
+//		ApartmentDAO apDAO = (ApartmentDAO)this.ctx.getAttribute("apartmentDAO");
+//		
+//		return Response.status(200).entity(apDAO.findAllHostApartments(host)).build(); 
+//		
+//	}
 	
-	@GET
-	@Path("/allActive")
-	@Produces(MediaType.APPLICATION_JSON)
-	public List<Apartment> getAllActive(@Context HttpServletRequest request){
-		
-		ApartmentDAO apDAO = (ApartmentDAO) this.ctx.getAttribute("apartmentDAO");
-		return (ArrayList<Apartment>) apDAO.getAllActive();
-		
-	}
+//	@GET
+//	@Path("/allActive")
+//	@Produces(MediaType.APPLICATION_JSON)
+//	public List<Apartment> getAllActive(@Context HttpServletRequest request){
+//		
+//		ApartmentDAO apDAO = (ApartmentDAO) this.ctx.getAttribute("apartmentDAO");
+//		return (ArrayList<Apartment>) apDAO.getAllActive();
+//		
+//	}
+	
+	
+//	@POST
+//	@Path("/new")
+//	@Consumes(MediaType.APPLICATION_JSON)
+//	public Response createNewApartment(Apartment apartment, @Context HttpServletRequest request) {
+//		ApartmentDAO apDAO = (ApartmentDAO)this.ctx.getAttribute("apartmentDAO");
+//		String contextPath = ctx.getRealPath("");
+//		List<AvailableDate> listaDatuma = new ArrayList<>();
+//		List<ApartmentComment> listaKomentara = new ArrayList<>();
+//		List<Reservation> listaRezervacija = new ArrayList<>();
+//		apartment.setAppartmentDates(listaDatuma);
+//		apartment.setComments(listaKomentara);
+//		apartment.setReservations(listaRezervacija);
+//		apDAO.dodaj(apartment, contextPath);
+////		try {
+////			apDAO.saveApartments();
+////		} catch (Exception e) {
+////			// TODO Auto-generated catch block
+////			e.printStackTrace();
+////			return Response.status(500).entity("Greska pri cuvanja apartmana").build();
+////		}
+//		
+//		return Response.status(200).build();
+//			
+//	}
+	
 	@POST
 	@Path("/new")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response createNewApartment(Apartment apartment, @Context HttpServletRequest request) {
+	public Response createNewApartment(@Context HttpServletRequest request) {
 		ApartmentDAO apDAO = (ApartmentDAO)this.ctx.getAttribute("apartmentDAO");
-		apDAO.putApartment(apartment);
-		try {
-			apDAO.saveApartments();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return Response.status(500).entity("Greska pri cuvanja apartmana").build();
-		}
+		Apartment apartment = new Apartment();
+		String contextPath = ctx.getRealPath("");
+		List<AvailableDate> listaDatuma = new ArrayList<>();
+		List<ApartmentComment> listaKomentara = new ArrayList<>();
+		List<Reservation> listaRezervacija = new ArrayList<>();
+		apartment.setAppartmentDates(listaDatuma);
+		apartment.setComments(listaKomentara);
+		apartment.setReservations(listaRezervacija);
+		apDAO.dodaj(apartment, contextPath);
+//		try {
+//			apDAO.saveApartments();
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//			return Response.status(500).entity("Greska pri cuvanja apartmana").build();
+//		}
 		
 		return Response.status(200).build();
 			
 	}
 	
-	@PUT
-	@Path("/modify/{id}")
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Response modifyApartment(Apartment modifiedApartment ,@PathParam("id") Long id, 
-			@Context HttpServletRequest request) {
-		ApartmentDAO apDAO = (ApartmentDAO)this.ctx.getAttribute("apartmentDAO");
-		apDAO.modifyApartment(modifiedApartment,id);
-		try {
-			apDAO.saveApartments();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return Response.status(500).entity("Greska pri cuvanju modifikovanog apartmana").build();
-		}
-		
-		return Response.status(200).build();
-	}
-	@DELETE
-	@Path("/delete/{id}")
-	public Response deleteApartment(@PathParam("id") Long id, @Context HttpServletRequest request) {
-		ApartmentDAO apDAO = (ApartmentDAO) this.ctx.getAttribute("apartmentDAO");
-		apDAO.deleteApartment(id);
-		try {
-			apDAO.saveApartments();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return Response.status(500).entity("Greska pri cuvanju obrisanog apartmana").build();
-		}
-		
-		return Response.status(200).build();
-		
-	}
-	@PUT
-	@Path("addComment/{guest}/{apartment}")
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Response addCommentToApartment(ApartmentComment comment, @Context HttpServletRequest request,
-			@PathParam("guest") String username, @PathParam("apartment") Long id) {
-		UserDAO userDAO = (UserDAO) this.ctx.getAttribute("userDAO");
-		Guest guest = (Guest) userDAO.searchUsers(username);
-		
-		ApartmentDAO apDAO = (ApartmentDAO) this.ctx.getAttribute("apartmentDAO");
-		Apartment apartment = apDAO.find(id);
-		
-		comment.setGuest(guest);
-		comment.setApartment(apartment);
-		apartment.getComments().add(comment);
-		
-		apDAO.putApartment(apartment);
-		
-		try {
-			apDAO.saveApartments();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return Response.status(500).build();
-		}
-		
-		return Response.status(200).build();	
-	}
+//	@PUT
+//	@Path("/modify/{id}")
+//	@Consumes(MediaType.APPLICATION_JSON)
+//	public Response modifyApartment(Apartment modifiedApartment ,@PathParam("id") Long id, 
+//			@Context HttpServletRequest request) {
+//		ApartmentDAO apDAO = (ApartmentDAO)this.ctx.getAttribute("apartmentDAO");
+//		apDAO.modifyApartment(modifiedApartment,id);
+//		try {
+//			apDAO.saveApartments();
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//			return Response.status(500).entity("Greska pri cuvanju modifikovanog apartmana").build();
+//		}
+//		
+//		return Response.status(200).build();
+//	}
+//	@DELETE
+//	@Path("/delete/{id}")
+//	public Response deleteApartment(@PathParam("id") Long id, @Context HttpServletRequest request) {
+//		ApartmentDAO apDAO = (ApartmentDAO) this.ctx.getAttribute("apartmentDAO");
+//		apDAO.deleteApartment(id);
+//		try {
+//			apDAO.saveApartments();
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//			return Response.status(500).entity("Greska pri cuvanju obrisanog apartmana").build();
+//		}
+//		
+//		return Response.status(200).build();
+//		
+//	}
+//	@PUT
+//	@Path("addComment/{guest}/{apartment}")
+//	@Consumes(MediaType.APPLICATION_JSON)
+//	public Response addCommentToApartment(ApartmentComment comment, @Context HttpServletRequest request,
+//			@PathParam("guest") String username, @PathParam("apartment") Long id) {
+//		UserDAO userDAO = (UserDAO) this.ctx.getAttribute("userDAO");
+//		Guest guest = (Guest) userDAO.searchUsers(username);
+//		
+//		ApartmentDAO apDAO = (ApartmentDAO) this.ctx.getAttribute("apartmentDAO");
+//		Apartment apartment = apDAO.find(id);
+//		
+//		comment.setGuest(guest);
+//		comment.setApartment(apartment);
+//		apartment.getComments().add(comment);
+//		
+//		apDAO.putApartment(apartment);
+//		
+//		try {
+//			apDAO.saveApartments();
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//			return Response.status(500).build();
+//		}
+//		
+//		return Response.status(200).build();	
+//	}
 
 }
