@@ -95,8 +95,10 @@ public class AmenitiesDAO {
 //			u.setId(id);
 			proba.add(u);  //sve koji su bili + novi, mapa i fajl moraju biti uskladjeni
 			objectMapper.writeValue(new File(contextPath + "/amenitiess.json"), proba);
-			String str = String.valueOf(u.getId());
-			Amenities r=amenitiess.put(str, u);
+			
+			
+//			String str = String.valueOf(u.getId());
+			Amenities r=amenitiess.put(u.getName(), u);
 			
 			System.out.println(amenitiess);
 			
@@ -107,8 +109,8 @@ public class AmenitiesDAO {
 		} finally {
 			
 		}
-		String str = String.valueOf(u.getId());
-		this.amenitiess.put(str,u);
+//		String str = String.valueOf(u.getId());
+		this.amenitiess.put(u.getName(),u);
 		
 	}
 	
@@ -138,8 +140,8 @@ public class AmenitiesDAO {
 			
 			for(Amenities u : car)
 			{
-				String str = String.valueOf(u.getId());
-				amenitiess.put(str,u);
+//				String str = String.valueOf(u.getId());
+				amenitiess.put(u.getName(),u);
 			}
 			
 			System.out.println(amenitiess);

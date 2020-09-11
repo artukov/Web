@@ -431,6 +431,18 @@ public class ApartmentDAO {
 	}
 	
 	
+	public Collection<Apartment> getAllActive(){
+		ArrayList<Apartment> retApartments = new ArrayList<Apartment>();
+		for(Apartment iter : this.apartments.values()) {
+			if(iter.isAppStatus()) {
+				retApartments.add(iter);
+			}
+		}
+		
+		return retApartments;
+	}
+	
+	
 	
 	
 	

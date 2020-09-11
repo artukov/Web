@@ -37,6 +37,7 @@ export default {
         password: "",
         username: "",
       },
+      users: [],
       info: null,
       error: false,
       errorMessage: "",
@@ -73,6 +74,16 @@ export default {
       })
     },
   },
+
+  mounted() {
+      axios.get("/Web/rest/users")
+      .then(users => {
+        this.users = users.data;
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
 };
 </script>
 

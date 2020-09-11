@@ -1,6 +1,15 @@
 <template>
 
 <div class="position">
+
+    <b-container v-if="error">
+      <b-alert show variant="danger" class="d-flex justify-content-center">{{errormessage}}</b-alert>
+    </b-container>
+
+     <b-container v-if="success">
+      <b-alert show variant="success" class="d-flex justify-content-center">{{successmessages}}</b-alert>
+    </b-container>
+
     <b-form @submit.prevent="onSubmit" method="post">
 
       <b-form-group id="input-group-3" label="Apartment type:" label-for="input-3">
@@ -39,15 +48,6 @@
             {{location.longitude}}, {{location.latitude}}, {{location.address.city}}
           </option>
         </b-form-select>
-      </b-form-group>
-
-      <b-form-group id="input-group-3" label="Host:" label-for="input-2">
-        <b-form-input
-          id="input-2"
-          
-          required
-          placeholder="Enter host"
-        ></b-form-input>
       </b-form-group>
 
       <b-form-group id="input-group-3" label="Price per night:" label-for="input-2">
@@ -95,7 +95,7 @@
 
       
 
-      <b-button type="submit" variant="primary">Register</b-button>
+      <b-button type="submit" variant="primary">Add apartment</b-button>
       <b-button @click="idemo" variant="primary">Idemo</b-button>
     </b-form>
 
@@ -126,25 +126,35 @@ export default {
                 apartmentType: "",
                 numberRooms: "",
                 guestNumber: "",
-                location: {},
-                // appartmentDates: null,
-                host: this.$store.state.user,
-                // comments: null,
+                location: "",
+                // // appartmentDates: null,
+                host: "",
+                // // comments: null,
                 priceNight: "",
                 checkIn: "14:00",
                 checkOut: "10:00",
-                appStatus: false,
-                amenities: [],
-                // reservations: null
+                appStatus: true,
+                amenities: []
+                // // reservations: null
             },
             types: ["ROOM", "COMPLETE"],
             selectedLocation: "",
             locations: [],
             amenities: [],
             apartments: [],
-            localFields: { value: 'id', text: 'name' },
+            // localFields: { value: 'id', text: 'name' },
+            localFields: { text: 'name' },
             selectedAmenities: null,
-            reservations: ""
+            reservations: "",
+            argument: "",
+            argument1: "",
+            argument2: "",
+            argument3: "",
+            users: [],
+            error: false,
+            errormessage: "",
+            success: false,
+            successmessages: ""
         }
     },
 
@@ -152,7 +162,7 @@ export default {
       idemo() {
         axios.get("/Web/rest/apartment/all")
         .then(response => {
-          this.locations = response.data;
+          this.apartments = response.data;
           if(response.status == 200) {
             console.log("ide gaaaaas")
           }
@@ -163,12 +173,30 @@ export default {
       },
 
       onSubmit() {
-        axios.post("/Web/rest/apartment/new")
+        // for(var user in this.users) {
+        //   if(user.username === this.$store.state.user.data.username) {
+        //     this.form.host = user;
+        //   }
+        // }
+
+        // this.form.host = this.$store.state.user.data.username;
+        axios.post("/Web/rest/apartment/new", this.form)
         .then(response => {
-          this.form = response.data;
+          this.apartments = response.data;
+          if(response.status == 200) {
+            this.success = true,
+            this.successmessages = "You have succesfully added a new apartment."
+            this.error = false;
+          } else {
+            // console.log(error);
+            this.errormessage = "Error while adding an apartment.";
+            this.error = true;
+          }
         })
         .catch(error => {
           console.log(error);
+          this.errormessage = "Error while adding an apartment.";
+          this.error = true;
         });
         }
       }
@@ -177,6 +205,8 @@ export default {
     ,
 
     mounted() {
+      // this.form.host = this.users.indexOf(0);
+      this.form.host = this.$store.state.user.data.username;
       axios.get("/Web/rest/locations")
         .then(response => {
           this.locations = response.data;
@@ -195,6 +225,14 @@ export default {
           if(response.status == 200) {
             console.log("ide gaaaaas")
           }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+
+        axios.get("/Web/rest/users")
+        .then(users => {
+          this.users = users.data;
         })
         .catch(error => {
           console.log(error);

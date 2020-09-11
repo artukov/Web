@@ -4,7 +4,7 @@ import java.util.UUID;
 
 public class Amenities {
 
-	private UUID id;
+//	private UUID id;
 	private String name;
 	public Amenities() {
 		super();
@@ -17,7 +17,7 @@ public class Amenities {
 	}
 	
 	public Amenities(String name) {
-		this.id = UUID.randomUUID();
+//		this.id = UUID.randomUUID();
 		this.name = name;
 	}
 	
@@ -29,13 +29,13 @@ public class Amenities {
 //		return id;
 //	}
 	
-	public UUID getId() {
-	return id;
-	}
+//	public UUID getId() {
+//	return id;
+//	}
 	
-	public void setId(UUID id) {
-	this.id = id;
-	}
+//	public void setId(UUID id) {
+//	this.id = id;
+//	}
 //	public void setId(Long id) {
 //		this.id = id;
 //	}

@@ -3,6 +3,7 @@ package services;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -29,7 +30,9 @@ import beans.Guest;
 import beans.Host;
 import beans.Location;
 import beans.Reservation;
+import beans.User;
 import dao.ApartmentDAO;
+import dao.LocationDAO;
 import dao.UserDAO;
 
 @Path("/apartment")
@@ -48,6 +51,9 @@ public class ApartmentService {
 		}
 		if(ctx.getAttribute("userDAO") == null) {
 			this.ctx.setAttribute("userDAO", new UserDAO(this.ctx.getRealPath("/")));
+		}
+		if(ctx.getAttribute("locationDAO") == null) {
+			this.ctx.setAttribute("locationDAO", new LocationDAO(this.ctx.getRealPath("/")));
 		}
 	}
 	
@@ -80,24 +86,81 @@ public class ApartmentService {
 		return Response.ok().entity(apartments).build();
 	}
 	
-//	@GET
-//	@Path("/hostAll/{hostUsername}")
-//	@Consumes(MediaType.APPLICATION_JSON)
-//	@Produces(MediaType.APPLICATION_JSON)
-//	public Response getAllHostApartments(@Context HttpServletRequest request, 
-//			@PathParam("hostUsername") String hostUsername) {
-//		UserDAO dao = (UserDAO)this.ctx.getAttribute("userDAO");
+	@GET
+	@Path("/hostAll/{hostUsername}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getAllHostApartments(@Context HttpServletRequest request, 
+			@PathParam("hostUsername") String hostUsername) {
+		UserDAO dao = (UserDAO)this.ctx.getAttribute("userDAO");
 //		Host host = (Host)dao.searchUsers(hostUsername);
 //		
 //		if(host == null) {
 //			return Response.status(400).entity("Pogresan korisnika").build();
 //		}
+		
+		ApartmentDAO apDAO = (ApartmentDAO)this.ctx.getAttribute("apartmentDAO");
+		
+		Collection<Apartment> apartments = apDAO.getApartments().values();
+		
+		return Response.status(200).entity(apartments).build(); 
+		
+	}
+	
+	
+	@GET
+	@Path("/hostAllActive/{hostUsername}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getAllActiveHostApartments(@Context HttpServletRequest request, 
+			@PathParam("hostUsername") String hostUsername) {
+		UserDAO dao = (UserDAO)this.ctx.getAttribute("userDAO");
+//		Host host = (Host)dao.searchUsers(hostUsername);
 //		
-//		ApartmentDAO apDAO = (ApartmentDAO)this.ctx.getAttribute("apartmentDAO");
+//		if(host == null) {
+//			return Response.status(400).entity("Pogresan korisnika").build();
+//		}
+		
+		ApartmentDAO apDAO = (ApartmentDAO)this.ctx.getAttribute("apartmentDAO");
+		
+		Collection<Apartment> apartments = apDAO.getApartments().values();
+		Collection<Apartment> activeApartments = new ArrayList<Apartment>();
+		for(Apartment apartment : apartments) {
+			if(apartment.isAppStatus()) {
+				activeApartments.add(apartment);
+			}
+		}
+		
+		return Response.status(200).entity(activeApartments).build(); 
+		
+	}
+	
+	@GET
+	@Path("/hostAllNotActive/{hostUsername}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getAllNotActiveHostApartments(@Context HttpServletRequest request, 
+			@PathParam("hostUsername") String hostUsername) {
+		UserDAO dao = (UserDAO)this.ctx.getAttribute("userDAO");
+//		Host host = (Host)dao.searchUsers(hostUsername);
 //		
-//		return Response.status(200).entity(apDAO.findAllHostApartments(host)).build(); 
-//		
-//	}
+//		if(host == null) {
+//			return Response.status(400).entity("Pogresan korisnika").build();
+//		}
+		
+		ApartmentDAO apDAO = (ApartmentDAO)this.ctx.getAttribute("apartmentDAO");
+		
+		Collection<Apartment> apartments = apDAO.getApartments().values();
+		Collection<Apartment> inactiveApartments = new ArrayList<Apartment>();
+		for(Apartment apartment : apartments) {
+			if(!apartment.isAppStatus()) {
+				inactiveApartments.add(apartment);
+			}
+		}
+		
+		return Response.status(200).entity(inactiveApartments).build(); 
+		
+	}
 	
 //	@GET
 //	@Path("/allActive")
@@ -113,6 +176,7 @@ public class ApartmentService {
 //	@POST
 //	@Path("/new")
 //	@Consumes(MediaType.APPLICATION_JSON)
+//	@Produces(MediaType.APPLICATION_JSON)
 //	public Response createNewApartment(Apartment apartment, @Context HttpServletRequest request) {
 //		ApartmentDAO apDAO = (ApartmentDAO)this.ctx.getAttribute("apartmentDAO");
 //		String contextPath = ctx.getRealPath("");
@@ -138,9 +202,10 @@ public class ApartmentService {
 	@POST
 	@Path("/new")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response createNewApartment(@Context HttpServletRequest request) {
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response createNewApartment(Apartment apartment, @Context HttpServletRequest request) {
 		ApartmentDAO apDAO = (ApartmentDAO)this.ctx.getAttribute("apartmentDAO");
-		Apartment apartment = new Apartment();
+//		Apartment apartment = new Apartment();
 		String contextPath = ctx.getRealPath("");
 		List<AvailableDate> listaDatuma = new ArrayList<>();
 		List<ApartmentComment> listaKomentara = new ArrayList<>();
@@ -148,7 +213,7 @@ public class ApartmentService {
 		apartment.setAppartmentDates(listaDatuma);
 		apartment.setComments(listaKomentara);
 		apartment.setReservations(listaRezervacija);
-		apDAO.dodaj(apartment, contextPath);
+//		apDAO.dodaj(apartment, contextPath);
 //		try {
 //			apDAO.saveApartments();
 //		} catch (Exception e) {
@@ -156,8 +221,13 @@ public class ApartmentService {
 //			e.printStackTrace();
 //			return Response.status(500).entity("Greska pri cuvanja apartmana").build();
 //		}
-		
-		return Response.status(200).build();
+		Collection<Apartment> apartments = apDAO.getApartments().values();
+//		HashMap<String,Apartment> apartmentMap = new HashMap<String,Apartment>();
+//		String str = String.valueOf(apartment.getId());
+//		apartmentMap.put(str,apartment);
+//		apDAO.dodajuFile(apartmentMap, contextPath);
+		apDAO.dodaj(apartment, contextPath);
+		return Response.status(200).entity(apartments).build();
 			
 	}
 	
