@@ -106,7 +106,7 @@ public class RegisterService {
 		userDao.dodaj(user,contextPath);
 		System.out.println(userDao);
 		
-		return Response.status(200).entity(userLog).build();
+		return Response.status(200).entity(user).build();
 	}
 	
 	

@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
@@ -21,6 +22,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import beans.Admin;
 import beans.Apartment;
@@ -85,6 +88,29 @@ public class ApartmentService {
 		
 		return Response.ok().entity(apartments).build();
 	}
+	
+	
+	@GET
+	@Path("/allActive")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getAllActiveApartments(@Context HttpServletRequest request) {
+		
+		ApartmentDAO apDAO = (ApartmentDAO)this.ctx.getAttribute("apartmentDAO");
+		Admin admin = (Admin) request.getSession().getAttribute("user");
+		
+//		if(admin == null) {
+//			return Response.status(403).build();
+//		}
+		Collection<Apartment> apartments = apDAO.getApartments().values();
+		Collection<Apartment> activeApartments = new ArrayList<Apartment>();
+		for(Apartment apartment : apartments) {
+			if(apartment.isAppStatus()) {
+				activeApartments.add(apartment);
+			}
+		}
+		return Response.ok().entity(activeApartments).build();
+	}
+	
 	
 	@GET
 	@Path("/hostAll/{hostUsername}")
@@ -229,6 +255,73 @@ public class ApartmentService {
 		apDAO.dodaj(apartment, contextPath);
 		return Response.status(200).entity(apartments).build();
 			
+	}
+	
+	@PUT
+	@Path("/activate/{id}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response activateApartment(@Context HttpServletRequest request, @PathParam("id") UUID id) {
+		ApartmentDAO apartmentDAO = (ApartmentDAO) this.ctx.getAttribute("apartmentDAO");
+		String contextPath = ctx.getRealPath("");
+		Collection<Apartment> apartments = apartmentDAO.getApartments().values();
+		for(Apartment apartment : apartments) {
+			if(id.equals(apartment.getId())) {
+				apartment.setAppStatus(true);
+				apartmentDAO.dodaj(apartment,contextPath);
+			}
+		}
+		return Response.status(200).entity(apartments).build();
+	}
+	
+//	@GET
+//	@Path("/hostAll/{hostUsername}")
+//	@Consumes(MediaType.APPLICATION_JSON)
+//	@Produces(MediaType.APPLICATION_JSON)
+//	public Response getAllHostApartments(@Context HttpServletRequest request, 
+//			@PathParam("hostUsername") String hostUsername) {
+//		UserDAO dao = (UserDAO)this.ctx.getAttribute("userDAO");
+////		Host host = (Host)dao.searchUsers(hostUsername);
+////		
+////		if(host == null) {
+////			return Response.status(400).entity("Pogresan korisnika").build();
+////		}
+//		
+//		ApartmentDAO apDAO = (ApartmentDAO)this.ctx.getAttribute("apartmentDAO");
+//		
+//		Collection<Apartment> apartments = apDAO.getApartments().values();
+//		
+//		return Response.status(200).entity(apartments).build(); 
+//		
+//	}
+	
+	@PUT
+	@Path("/deactivate/{id}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@JsonBackReference
+	public Response deactivateApartment(@Context HttpServletRequest request, @PathParam("id") UUID id) {
+		ApartmentDAO apartmentDAO = (ApartmentDAO) this.ctx.getAttribute("apartmentDAO");
+		String contextPath = ctx.getRealPath("");
+		Collection<Apartment> apartments = apartmentDAO.getApartments().values();
+		for(Apartment apartment : apartments) {
+			if(id.equals(apartment.getId())) {
+				apartment.setAppStatus(false);
+				apartmentDAO.dodaj(apartment,contextPath);
+			}
+		}
+		return Response.status(200).entity(apartments).build();
+	}
+	
+	@POST
+	@Path("/search")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response searchApartments(Apartment apartment, @Context HttpServletRequest request) {
+		ApartmentDAO apartmentDAO = (ApartmentDAO) ctx.getAttribute("apartmentDAO");
+		String contextPath = ctx.getRealPath("");
+		Collection<Apartment> apartments = apartmentDAO.searchApartments(apartment);
+		return Response.status(200).entity(apartments).build();
 	}
 	
 //	@PUT

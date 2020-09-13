@@ -15,7 +15,7 @@ public class Apartment {
 	private String host;
 	private List<ApartmentComment> comments;
 	private String image;
-	private double priceNight;
+	private Integer priceNight;
 	private String checkIn;
 	private String checkOut;
 	private boolean appStatus;
@@ -29,7 +29,16 @@ public class Apartment {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public Apartment(ApartmentType apartmentType, Integer numberRooms, Integer guestNumber, Integer location, String host, double priceNight, String checkIn, String checkOut, boolean appStatus, List<String> amenities) {
+	public Apartment(List<AvailableDate> appartmentDates, Integer location, Integer priceNight, Integer numberRooms,  Integer guestNumber) {
+		this.appartmentDates = appartmentDates;
+		this.location = location;
+		this.priceNight = priceNight;
+		this.numberRooms = numberRooms;
+		this.guestNumber = guestNumber;
+		this.id = UUID.randomUUID();
+	}
+	
+	public Apartment(ApartmentType apartmentType, Integer numberRooms, Integer guestNumber, Integer location, String host, Integer priceNight, String checkIn, String checkOut, boolean appStatus, List<String> amenities) {
 		this.apartmentType = apartmentType;
 		this.numberRooms = numberRooms;
 		this.guestNumber = guestNumber;
@@ -178,10 +187,10 @@ public class Apartment {
 	public void setImage(String image) {
 		this.image = image;
 	}
-	public double getPriceNight() {
+	public Integer getPriceNight() {
 		return priceNight;
 	}
-	public void setPriceNight(double priceNight) {
+	public void setPriceNight(Integer priceNight) {
 		this.priceNight = priceNight;
 	}
 	public String getCheckIn() {

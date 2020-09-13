@@ -17,6 +17,7 @@
           <router-link to="/addApartment" v-if="this.$store.state.role == 'HOST'">Add apartment</router-link>|
           <router-link to="/myApartments" v-if="this.$store.state.role == 'HOST'">My apartments</router-link>|
           <!-- <router-link to="/" @click="logout" v-if="this.$store.state.user != null">Logout</router-link>| -->
+          <router-link to="/apartments">Apartments</router-link>|
           
           <b-nav-item-dropdown text="Sidebar" left>
           <router-link to="/searchUsers">Search users</router-link>
@@ -99,7 +100,7 @@ export default {
 
  body {
     background-image: url('https://i.pinimg.com/originals/84/6c/b3/846cb34da29e27a5de7e76d0e0b613aa.jpg');
-    background-repeat: no-repeat;
+    // background-repeat: no-repeat;
 
     /* background-color: #ECE0BD; */
     

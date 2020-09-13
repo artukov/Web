@@ -1,10 +1,12 @@
 package beans;
 
+import java.util.UUID;
+
 public class Location {
 	private Double longitude;
 	private Double latitude;
 	private Address address;
-//	private Long id;
+	private UUID id;
 	public Location() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -14,13 +16,14 @@ public class Location {
 		this.longitude = longitude;
 		this.latitude = latitude;
 		this.address = address;
+		this.id = UUID.randomUUID();
 	}
-//	public Long getId() {
-//		return id;
-//	}
-//	public void setId(Long id) {
-//		this.id = id;
-//	}
+	public UUID getId() {
+		return id;
+	}
+	public void setId(UUID id) {
+		this.id = id;
+	}
 	public Double getLongitude() {
 		return longitude;
 	}
