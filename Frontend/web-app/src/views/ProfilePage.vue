@@ -1,5 +1,14 @@
 <template>
   <div class="position">
+
+    <b-container v-if="error">
+      <b-alert show variant="danger" class="d-flex justify-content-center">{{errormessage}}</b-alert>
+    </b-container>
+
+     <b-container v-if="success">
+      <b-alert show variant="success" class="d-flex justify-content-center">{{successmessages}}</b-alert>
+    </b-container>
+
     <b-form @submit.prevent="onSubmit" method="post">
       <b-form-group id="input-group-2" label="Username:" label-for="input-2">
         <b-form-input
@@ -35,14 +44,14 @@
         ></b-form-select>
       </b-form-group>
 
-      <b-form-group id="input-group-3" label="Role:" label-for="input-3">
+      <!-- <b-form-group id="input-group-3" label="Role:" label-for="input-3">
         <b-form-select
           id="input-3"
           v-model="form.role"
           :options="roles"
           required
         ></b-form-select>
-      </b-form-group>
+      </b-form-group> -->
 
       <b-button type="submit" variant="primary">Change profile</b-button>
       <b-button @onClick="comeon()" variant="primary">Come on</b-button>
@@ -65,12 +74,14 @@ export default {
       },
       genders: ["MALE", "FEMALE"],
       roles: ["GUEST", "HOST"],
-      error: false,
-      errorMessage: "",
       confirmPass: "",
       info: "",
       loggedUser: "",
-      proba: ""
+      proba: "",
+      error: false,
+      errormessage: "",
+      success: false,
+      successmessages: ""
     };
   },
 
@@ -109,15 +120,25 @@ export default {
 
     onSubmit() {
       axios.put("/Web/rest/modify", this.form)
-        .then(form => {
-          this.form = form.data;
+        .then(response => {
+          this.form = response.data;
           this.error = false;
           this.info = "User profile successfully changed.";
           console.log("sadasd");
+          this.$store.state.user.data.name = this.form.name;
+          this.$store.state.user.data.password = this.form.password;
+          this.$store.state.user.data.lastName = this.form.lastName;
+          this.$store.state.user.data.gender = this.form.gender;
+          this.$store.state.user.data.role = this.form.role;
           // location.reload();
+          if(response.status == 200) {
+            this.success = true;
+            this.successmessages = "Profile successfully changed.";
+            this.error = false;
+          }
         })
         .catch(error => {
-          this.errorMessage = "Bad credentials."
+          this.errorMessage = "Error occurred while changing profile!"
           this.error = true;
           error;
         })

@@ -1,6 +1,7 @@
 package beans;
 
 import java.util.Date;
+import java.util.UUID;
 
 public class Reservation {
 	
@@ -11,6 +12,7 @@ public class Reservation {
 	private String reservationMessage;
 	private Guest guest;
 	private ReservationStatus statusRes;
+	private UUID id;
 	
 	
 	public Reservation(Apartment apartment, Date startDate, Integer numberNights, Double fullPrice,
@@ -23,10 +25,25 @@ public class Reservation {
 		this.reservationMessage = reservationMessage;
 		this.guest = guest;
 		this.statusRes = statusRes;
+		this.id = UUID.randomUUID();
 	}
+	
+	public Reservation(Apartment apartment) {
+		super();
+		this.apartment = apartment;
+		this.id = UUID.randomUUID();
+	}
+	
 	public Reservation() {
 		super();
 		// TODO Auto-generated constructor stub
+	}
+	public UUID getId() {
+		return id;
+	}
+	
+	public void setId(UUID id) {
+		this.id = id;
 	}
 	public Apartment getApartment() {
 		return apartment;

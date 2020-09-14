@@ -93,10 +93,13 @@ public class AdminService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response register(User user, @Context HttpServletRequest request) { //vidi dal user ili response pa sta onda
 		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
-		User korisnik = new User("uganda", "sifra", "Bojan", "Simeunoviski", GenderEnum.MALE, UserRole.GUEST);
-		User korisnik2 = new User("ugandaa", "sifra", "Bojan", "Simeunovski", GenderEnum.MALE, UserRole.GUEST);
-		userDao.add(korisnik);
-		userDao.add(korisnik2);
+		String contextPath = ctx.getRealPath("");
+//		User korisnik = new User("uganda", "sifra", "Bojan", "Simeunoviski", GenderEnum.MALE, UserRole.HOST);
+//		User korisnik2 = new User("ugandaa", "sifra", "Bojan", "Simeunovski", GenderEnum.MALE, UserRole.GUEST);
+//		userDao.add(korisnik);
+//		userDao.add(korisnik2);
+//		userDao.dodaj(korisnik,contextPath);
+//		userDao.dodaj(korisnik2,contextPath);
 		Collection<User> users = userDao.getUsers().values();
 		Collection<User> returnList = new ArrayList<>();
 		
@@ -142,11 +145,11 @@ public class AdminService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Collection<User> getUsers(@Context HttpServletRequest request) {
 		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
-		User korisnik = new User("uganda", "sifra", "Bojan", "Simeunoviski", GenderEnum.MALE, UserRole.GUEST);
-		User korisnik2 = new User("peru", "sifra", "Nikola", "Artukov", GenderEnum.MALE, UserRole.ADMIN);
 		String contextPath = ctx.getRealPath("");
+		User korisnik = new User("uganda", "sifra", "Bojan", "Simeunoviski", GenderEnum.MALE, UserRole.HOST);
+		User korisnik2 = new User("ugandaa", "sifra", "Bojan", "Simeunovski", GenderEnum.MALE, UserRole.GUEST);
 		userDao.dodaj(korisnik,contextPath);
-		userDao.dodaj(korisnik2, contextPath);
+		userDao.dodaj(korisnik2,contextPath);
 		//		userDao.add(korisnik);
 		
 		Collection<User> users = userDao.getUsers().values();

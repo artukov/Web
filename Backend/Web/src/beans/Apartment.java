@@ -2,53 +2,175 @@ package beans;
 
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
+import org.apache.tomcat.jni.Time;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
 public class Apartment {
 	private ApartmentType apartmentType;
 	private Integer numberRooms;
 	private Integer guestNumber;
-	private Location location;
+	private Integer location;
 	private List<AvailableDate> appartmentDates;
-	private Host host;
+	private String host;
 	private List<ApartmentComment> comments;
 	private String image;
-	private double priceNight;
-	private Date checkIn;
-	private Date checkOut;
+	private Integer priceNight;
+	private String checkIn;
+	private String checkOut;
 	private boolean appStatus;
-	private List<Amenities> amenities;
+	private List<String> amenities;
 	private List<Reservation> reservations;
-	private Long id;
+	private UUID id;
 	
 	public Apartment() {
 		super();
+		this.id = UUID.randomUUID();
 		// TODO Auto-generated constructor stub
 	}
-	public Apartment(ApartmentType apartmentType, Integer numberRooms, Integer guestNumber, Location location,
-			List<AvailableDate> appartmentDates, Host host, List<ApartmentComment> comments, String image,
-			double priceNight, Date checkIn, Date checkOut, boolean appStatus, List<Amenities> amenities,
-			List<Reservation> reservations) {
+	
+	public Apartment(Integer numberRooms, Integer guestNumber, Integer location, Integer priceNight, boolean appStatus) {
+		this.numberRooms = numberRooms;
+		this.guestNumber = guestNumber;
+		this.location = location;
+		this.priceNight = priceNight;
+		this.appStatus = appStatus;
+		this.id = UUID.randomUUID();
+	}
+	
+	public Apartment(Integer numberRooms, Integer guestNumber, Integer location, String host, Integer priceNight, boolean appStatus) {
+		this.numberRooms = numberRooms;
+		this.guestNumber = guestNumber;
+		this.location = location;
+		this.host = host;
+		this.priceNight = priceNight;
+		this.appStatus = appStatus;
+		this.id = UUID.randomUUID();
+	}
+	
+	public Apartment(ApartmentType apartmentType, Integer numberRooms, Integer guestNumber, Integer location, Integer priceNight) {
+		this.appartmentDates = appartmentDates;
+		this.location = location;
+		this.priceNight = priceNight;
+		this.numberRooms = numberRooms;
+		this.guestNumber = guestNumber;
+		this.id = UUID.randomUUID();
+	}
+	
+	public Apartment(Integer location, Integer priceNight, Integer numberRooms,  Integer guestNumber) {
+		this.appartmentDates = appartmentDates;
+		this.location = location;
+		this.priceNight = priceNight;
+		this.numberRooms = numberRooms;
+		this.guestNumber = guestNumber;
+		this.id = UUID.randomUUID();
+	}
+	
+	public Apartment(ApartmentType apartmentType, Integer numberRooms, Integer guestNumber, Integer location, String host, Integer priceNight, String checkIn, String checkOut, boolean appStatus, List<String> amenities) {
+		this.apartmentType = apartmentType;
+		this.numberRooms = numberRooms;
+		this.guestNumber = guestNumber;
+		this.location = location;
+		this.host = host;
+		this.priceNight = priceNight;
+		this.checkIn = checkIn;
+		this.checkOut = checkOut;
+		this.appStatus = appStatus;
+		this.amenities = amenities;
+		this.id = UUID.randomUUID();
+	}
+//	public Apartment(ApartmentType apartmentType, Integer numberRooms, Integer guestNumber, Location location,
+//			List<AvailableDate> appartmentDates, Host host, List<ApartmentComment> comments, String image,
+//			double priceNight, Time checkIn, Time checkOut, boolean appStatus, List<Amenities> amenities,
+//			List<Reservation> reservations) {
+//		super();
+//		this.apartmentType = apartmentType;
+//		this.numberRooms = numberRooms;
+//		this.guestNumber = guestNumber;
+//		this.location = location;
+//		this.appartmentDates = appartmentDates;
+//		this.host = host;
+//		this.comments = comments;
+//		this.image = image;
+//		this.priceNight = priceNight;
+//		this.checkIn = checkIn;
+//		this.checkOut = checkOut;
+//		this.appStatus = appStatus;
+//		this.amenities = amenities;
+//		this.reservations = reservations;
+//		this.id = UUID.randomUUID();
+//	}
+	
+//	public Apartment(ApartmentType apartmentType, Integer numberRooms, Integer guestNumber, Location location,
+//			 Host host,
+//			double priceNight, Time checkIn, Time checkOut, boolean appStatus, List<Amenities> amenities) {
+//		super();
+//		this.apartmentType = apartmentType;
+//		this.numberRooms = numberRooms;
+//		this.guestNumber = guestNumber;
+//		this.location = location;
+////		this.appartmentDates = appartmentDates;
+//		this.host = host;
+////		this.comments = comments;
+////		this.image = image;
+//		this.priceNight = priceNight;
+//		this.checkIn = checkIn;
+//		this.checkOut = checkOut;
+//		this.appStatus = appStatus;
+//		this.amenities = amenities;
+////		this.reservations = reservations;
+//		this.id = UUID.randomUUID();
+//	}
+	
+//	public Apartment(ApartmentType apartmentType, Integer numberRooms, Integer guestNumber, Location location,
+//			double priceNight, Time checkIn, Time checkOut, boolean appStatus, List<Amenities> amenities) {
+//		super();
+//		this.apartmentType = apartmentType;
+//		this.numberRooms = numberRooms;
+//		this.guestNumber = guestNumber;
+//		this.location = location;
+////		this.appartmentDates = appartmentDates;
+////		this.host = host;
+////		this.comments = comments;
+////		this.image = image;
+//		this.priceNight = priceNight;
+//		this.checkIn = checkIn;
+//		this.checkOut = checkOut;
+//		this.appStatus = appStatus;
+//		this.amenities = amenities;
+////		this.reservations = reservations;
+//		this.id = UUID.randomUUID();
+//	}
+	
+	public Apartment(ApartmentType apartmentType, Integer numberRooms, Integer guestNumber, Integer location,
+			List<AvailableDate> appartmentDates) {
 		super();
 		this.apartmentType = apartmentType;
 		this.numberRooms = numberRooms;
 		this.guestNumber = guestNumber;
 		this.location = location;
 		this.appartmentDates = appartmentDates;
-		this.host = host;
-		this.comments = comments;
-		this.image = image;
-		this.priceNight = priceNight;
-		this.checkIn = checkIn;
-		this.checkOut = checkOut;
-		this.appStatus = appStatus;
-		this.amenities = amenities;
-		this.reservations = reservations;
+		this.id = UUID.randomUUID();
 	}
 	
-	public Long getId() {
+	
+	
+//	public Long getId() {
+//		return id;
+//	}
+//	public void setId(Long id) {
+//		this.id = id;
+//	}
+	public UUID getId() {
 		return id;
 	}
-	public void setId(Long id) {
+	public void setId(UUID id) {
 		this.id = id;
 	}
 	public ApartmentType getApartmentType() {
@@ -69,10 +191,10 @@ public class Apartment {
 	public void setGuestNumber(Integer guestNumber) {
 		this.guestNumber = guestNumber;
 	}
-	public Location getLocation() {
+	public Integer getLocation() {
 		return location;
 	}
-	public void setLocation(Location location) {
+	public void setLocation(Integer location) {
 		this.location = location;
 	}
 	public List<AvailableDate> getAppartmentDates() {
@@ -81,10 +203,10 @@ public class Apartment {
 	public void setAppartmentDates(List<AvailableDate> appartmentDates) {
 		this.appartmentDates = appartmentDates;
 	}
-	public Host getHost() {
+	public String getHost() {
 		return host;
 	}
-	public void setHost(Host host) {
+	public void setHost(String host) {
 		this.host = host;
 	}
 	public List<ApartmentComment> getComments() {
@@ -99,22 +221,22 @@ public class Apartment {
 	public void setImage(String image) {
 		this.image = image;
 	}
-	public double getPriceNight() {
+	public Integer getPriceNight() {
 		return priceNight;
 	}
-	public void setPriceNight(double priceNight) {
+	public void setPriceNight(Integer priceNight) {
 		this.priceNight = priceNight;
 	}
-	public Date getCheckIn() {
+	public String getCheckIn() {
 		return checkIn;
 	}
-	public void setCheckIn(Date checkIn) {
+	public void setCheckIn(String checkIn) {
 		this.checkIn = checkIn;
 	}
-	public Date getCheckOut() {
+	public String getCheckOut() {
 		return checkOut;
 	}
-	public void setCheckOut(Date checkOut) {
+	public void setCheckOut(String checkOut) {
 		this.checkOut = checkOut;
 	}
 	public boolean isAppStatus() {
@@ -123,10 +245,10 @@ public class Apartment {
 	public void setAppStatus(boolean appStatus) {
 		this.appStatus = appStatus;
 	}
-	public List<Amenities> getAmenities() {
+	public List<String> getAmenities() {
 		return amenities;
 	}
-	public void setAmenities(List<Amenities> amenities) {
+	public void setAmenities(List<String> amenities) {
 		this.amenities = amenities;
 	}
 	public List<Reservation> getReservations() {
