@@ -6,6 +6,12 @@ import java.util.UUID;
 
 import org.apache.tomcat.jni.Time;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
 public class Apartment {
 	private ApartmentType apartmentType;
 	private Integer numberRooms;
@@ -29,7 +35,35 @@ public class Apartment {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public Apartment(List<AvailableDate> appartmentDates, Integer location, Integer priceNight, Integer numberRooms,  Integer guestNumber) {
+	public Apartment(Integer numberRooms, Integer guestNumber, Integer location, Integer priceNight, boolean appStatus) {
+		this.numberRooms = numberRooms;
+		this.guestNumber = guestNumber;
+		this.location = location;
+		this.priceNight = priceNight;
+		this.appStatus = appStatus;
+		this.id = UUID.randomUUID();
+	}
+	
+	public Apartment(Integer numberRooms, Integer guestNumber, Integer location, String host, Integer priceNight, boolean appStatus) {
+		this.numberRooms = numberRooms;
+		this.guestNumber = guestNumber;
+		this.location = location;
+		this.host = host;
+		this.priceNight = priceNight;
+		this.appStatus = appStatus;
+		this.id = UUID.randomUUID();
+	}
+	
+	public Apartment(ApartmentType apartmentType, Integer numberRooms, Integer guestNumber, Integer location, Integer priceNight) {
+		this.appartmentDates = appartmentDates;
+		this.location = location;
+		this.priceNight = priceNight;
+		this.numberRooms = numberRooms;
+		this.guestNumber = guestNumber;
+		this.id = UUID.randomUUID();
+	}
+	
+	public Apartment(Integer location, Integer priceNight, Integer numberRooms,  Integer guestNumber) {
 		this.appartmentDates = appartmentDates;
 		this.location = location;
 		this.priceNight = priceNight;

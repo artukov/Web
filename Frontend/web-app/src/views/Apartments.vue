@@ -14,14 +14,6 @@
 
     <b-form @submit.prevent="onSubmit" method="get">
 
-      <b-form-group id="input-group-3" label="Apartment type:" label-for="input-3">
-        <b-form-select
-          id="input-3"
-          v-model="form.apartmentType"
-          :options="types"
-        ></b-form-select>
-      </b-form-group>
-
       <b-form-group id="input-group-2" label="Number of rooms:" label-for="input-2">
         <b-form-input
           id="input-2"
@@ -44,7 +36,7 @@
             v-for="location in locations"
             :value="location.longitude"
             :key="location.longitude">
-            {{location.longitude}}, {{location.latitude}}, {{location.address.city}}
+            {{location.address.city}}
           </option>
         </b-form-select>
       </b-form-group>
@@ -57,23 +49,6 @@
         ></b-form-input>
       </b-form-group>
 
-        <b-form-group id="input-group-3" label="Check in:" label-for="input-3">
-          <b-form-input
-            id="input-3"
-            type="time"
-            v-model="form.checkIn"
-          ></b-form-input>
-      </b-form-group>
-
-      <b-form-group id="input-group-3" label="Check out:" label-for="input-2">
-        <b-form-input
-          id="input-2"
-          type="time"
-          v-model="form.checkOut"
-        ></b-form-input>
-      </b-form-group>
-
-      <b-form-group id="input-group-1" label="Amenities:" label-for="input-1">
         <!-- <b-form-select multiple v-model="selectedLocation">
           <option
             v-for="location in locations"
@@ -83,16 +58,9 @@
           </option>
         </b-form-select> -->
         <!-- <multiselect v-model="selectedAmenities" :options="locations
-        " track-by="longitude" multiple></multiselect> -->
-        <ejs-multiselect :dataSource="amenities" :fields="localFields" v-model="form.amenities" placeholder="Select an amenity" popupWidth="200px" popupHeight="250px">
-          </ejs-multiselect>
-      </b-form-group>
-
-
-      
+        " track-by="longitude" multiple></multiselect> -->      
 
       <b-button type="submit" variant="primary">Search apartments</b-button>
-      <b-button variant="primary">Idemo</b-button>
     </b-form>
 
     <!-- <div>
@@ -132,35 +100,35 @@
                 <div class="row">
                     <div class="col">
                         <div class="md-form">
-                            <label for="Form-type">Apartment type</label>
-                            <label id="Form-type" class="form-control">{{activeApartment.apartmentType}}</label>
-
                             <label for="Form-rooms">Number of rooms</label>
                             <label id="Form-rooms" class="form-control">{{activeApartment.numberRooms}}</label>
 
                             <label for="Form-guests">Number of guests</label>
                             <label id="Form-guests" class="form-control">{{activeApartment.guestNumber}}</label>
 
-                            <label for="Form-surname">Location</label>
-                            <label id="Form-surname" class="form-control">{{activeApartment.location}}</label>
+                            <!-- <label for="Form-surname">Location</label>
+                            <label id="Form-surname" class="form-control">{{activeApartment.location}}</label> -->
+
+                            <div v-for="location in locations"  :value="location.longitude"
+            :key="location.longitude">
+                              <div v-if="location.longitude == form.location || form.location == ''">
+                                <label for="Form-surname">Location</label>
+                                <label id="Form-surname" class="form-control">{{location.address.city}}, {{location.address.street}} {{location.address.number}}</label>
+                              </div>
+                            </div>
+
+
 
                             <label for="Form-surname">Price per night</label>
                             <label id="Form-surname" class="form-control">{{activeApartment.priceNight}}</label>
-
-                            <label for="Form-surname">Check in time</label>
-                            <label id="Form-surname" class="form-control">{{activeApartment.checkIn}}</label>
-
-                            <label for="Form-surname">Check out time</label>
-                            <label id="Form-surname" class="form-control">{{activeApartment.checkOut}}</label>
-
                             <br/>
 
                             <div class="text-center mb-4">
                                 <button
                                 type="button"
-                                class="btn btn-danger btn-block z-depth-2"
+                                class="btn btn-primary btn-block z-depth-2"
                                 @click="Deactivate(activeApartment.id)"
-                                >Deactivate</button>
+                                >Change apartment</button>
                             </div>
                             
                             <!-- <div v-if="client.blocked" class="text-center mb-4">
@@ -188,31 +156,35 @@ export default {
         return {
             apartments: [],
             form: {
-                apartmentType: "",
                 numberRooms: "",
                 guestNumber: "",
                 location: "",
                 // // appartmentDates: null,
-                host: "",
                 // // comments: null,
                 priceNight: "",
-                checkIn: "",
-                checkOut: "",
                 appStatus: true,
-                amenities: []
                 // // reservations: null
             },
             types: ["ROOM", "COMPLETE"],
             locations: [],
             amenities: [],
             localFields: { text: 'name' },
+            address: ""
             
         }
     },
 
     methods: {
       onSubmit() {
-        axios.get("Web/rest/apartment/search", this.form) 
+        for(let location in this.locations) {
+          console.log("1");
+          if(location.longitude == this.form.location.longitude) {
+            this.address = location.address;
+            console.log("2");
+          }
+        }
+        // this.address = this.form.location;
+        axios.post("Web/rest/apartment/search", this.form) 
           .then(response => {
             this.apartments = response.data;
             if(response.status == 200) {

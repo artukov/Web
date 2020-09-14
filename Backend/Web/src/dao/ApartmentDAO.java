@@ -447,27 +447,22 @@ public class ApartmentDAO {
 		Collection<Apartment> allApartments = getAllActive();
 		Collection<Apartment> apartments = new ArrayList<Apartment>();
 		for(Apartment iter : allApartments) {
-			if(apartment.getApartmentType().equals("")) {
-				if(apartment.getApartmentType().equals(iter.getApartmentType())) {
-					continue;
-				}
-			}
-			if(!apartment.getNumberRooms().equals("")) {
+			if(!(apartment.getNumberRooms() == null)) {
 				if(!apartment.getNumberRooms().equals(iter.getNumberRooms())) {
 					continue;
 				}
 			}
-			if(!apartment.getGuestNumber().equals("")) {
+			if(!(apartment.getGuestNumber() == null)) {
 				if(apartment.getGuestNumber() > iter.getGuestNumber()) {
 					continue;
 				}
 			}
-			if(apartment.getLocation().equals("")) {
+			if(!(apartment.getLocation() == null)) {
 				if(!apartment.getLocation().equals(iter.getLocation())) {
 					continue;
 				}
 			}
-			if(!apartment.getPriceNight().equals("")) {
+			if(!(apartment.getPriceNight() == null)) {
 				if(apartment.getPriceNight() < iter.getPriceNight()) {
 					continue;
 				}
