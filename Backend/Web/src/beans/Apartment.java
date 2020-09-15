@@ -18,7 +18,7 @@ public class Apartment {
 	private Integer guestNumber;
 	private Integer location;
 	private List<AvailableDate> appartmentDates;
-	private String host;
+	private Host host;
 	private List<ApartmentComment> comments;
 	private String image;
 	private Integer priceNight;
@@ -44,7 +44,7 @@ public class Apartment {
 		this.id = UUID.randomUUID();
 	}
 	
-	public Apartment(Integer numberRooms, Integer guestNumber, Integer location, String host, Integer priceNight, boolean appStatus) {
+	public Apartment(Integer numberRooms, Integer guestNumber, Integer location, Host host, Integer priceNight, boolean appStatus) {
 		this.numberRooms = numberRooms;
 		this.guestNumber = guestNumber;
 		this.location = location;
@@ -72,7 +72,7 @@ public class Apartment {
 		this.id = UUID.randomUUID();
 	}
 	
-	public Apartment(ApartmentType apartmentType, Integer numberRooms, Integer guestNumber, Integer location, String host, Integer priceNight, String checkIn, String checkOut, boolean appStatus, List<String> amenities) {
+	public Apartment(ApartmentType apartmentType, Integer numberRooms, Integer guestNumber, Integer location, Host host, Integer priceNight, String checkIn, String checkOut, boolean appStatus, List<String> amenities) {
 		this.apartmentType = apartmentType;
 		this.numberRooms = numberRooms;
 		this.guestNumber = guestNumber;
@@ -203,10 +203,10 @@ public class Apartment {
 	public void setAppartmentDates(List<AvailableDate> appartmentDates) {
 		this.appartmentDates = appartmentDates;
 	}
-	public String getHost() {
+	public Host getHost() {
 		return host;
 	}
-	public void setHost(String host) {
+	public void setHost(Host host) {
 		this.host = host;
 	}
 	public List<ApartmentComment> getComments() {
