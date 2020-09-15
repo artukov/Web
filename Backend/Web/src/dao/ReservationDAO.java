@@ -5,16 +5,18 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.UUID;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import beans.Apartment;
 import beans.Reservation;
 
 public class ReservationDAO {
 
 	private HashMap<String, Reservation> reservations = new HashMap<>();
-	
+	private String contextPath;
 	private ReservationDAO() {
 		
 		
@@ -49,8 +51,8 @@ public class ReservationDAO {
 		return true;
 	}
 	
-	public Reservation searchReservations(String u) {
-		if (!reservations.containsKey(u)) {
+	public Reservation searchReservations(Reservation u) {
+		if (!reservations.containsKey(u.getId())) {
 			return null;
 		}
 		Reservation reservation = reservations.get(u);
@@ -227,6 +229,14 @@ public class ReservationDAO {
 //			e.printStackTrace();
 //		}
 //}
+	public Reservation findById(UUID id) {
+		// TODO Auto-generated method stub
+		Reservation reservation  = this.reservations.get(id);
+
+		return reservation;
+		
+	}
+	
 
 }
 
