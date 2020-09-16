@@ -17,6 +17,7 @@
       <b-form-group id="input-group-2" label="Number of rooms:" label-for="input-2">
         <b-form-input
           id="input-2"
+          type="number"
           v-model="form.numberRooms"
           placeholder="Enter number of rooms"
         ></b-form-input>
@@ -26,6 +27,7 @@
         <b-form-input
           id="input-2"
           v-model="form.guestNumber"
+          type="number"
           placeholder="Enter number of guests"
         ></b-form-input>
       </b-form-group>
@@ -52,6 +54,7 @@
         <b-form-input
           id="input-2"
           v-model="form.priceNight"
+          type="number"
           placeholder="Enter price"
         ></b-form-input>
       </b-form-group>
@@ -134,8 +137,8 @@
                                 <button
                                 type="button"
                                 class="btn btn-primary btn-block z-depth-2"
-                                @click="Deactivate(activeApartment.id)"
-                                >Change apartment</button>
+                                @click="reserve(activeApartment.id)"
+                                >Reserve apartment</button>
                             </div>
                             
                             <!-- <div v-if="client.blocked" class="text-center mb-4">

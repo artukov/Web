@@ -25,6 +25,7 @@
         <b-form-input
           id="input-2"
           v-model="form.numberRooms"
+          type="number"
           required
           placeholder="Enter number of rooms"
         ></b-form-input>
@@ -34,6 +35,7 @@
         <b-form-input
           id="input-2"
           v-model="form.guestNumber"
+          type="number"
           required
           placeholder="Enter number of guests"
         ></b-form-input>
@@ -54,6 +56,7 @@
         <b-form-input
           id="input-2"
           v-model="form.priceNight"
+          type="number"
           required
           placeholder="Enter price"
         ></b-form-input>
