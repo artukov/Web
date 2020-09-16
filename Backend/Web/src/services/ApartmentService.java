@@ -2,11 +2,13 @@ package services;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.UUID;
 
 import javax.annotation.PostConstruct;
@@ -284,14 +286,14 @@ public class ApartmentService {
 //			e.printStackTrace();
 //			return Response.status(500).entity("Greska pri cuvanja apartmana").build();
 //		}
-		Collection<Apartment> apartments = apDAO.getApartments().values();
+		
 //		HashMap<String,Apartment> apartmentMap = new HashMap<String,Apartment>();
 //		String str = String.valueOf(apartment.getId());
 //		apartmentMap.put(str,apartment);
 //		apDAO.dodajuFile(apartmentMap, contextPath);
+		Collection<Apartment> apartments = apDAO.getApartments().values();
 		apDAO.dodaj(apartment, contextPath);
 		return Response.status(200).entity(apartments).build();
-			
 	}
 	
 	@PUT

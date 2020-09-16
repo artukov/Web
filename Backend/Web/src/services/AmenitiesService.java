@@ -2,6 +2,7 @@ package services;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,6 +22,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import beans.Amenities;
+import beans.Apartment;
 import beans.User;
 import beans.UserRole;
 import dao.AmenitiesDAO;
@@ -103,6 +105,11 @@ public class AmenitiesService {
 		AmenitiesDAO amenitiesDAO = (AmenitiesDAO) this.ctx.getAttribute("amenitiesDAO");
 		String contextPath = ctx.getRealPath("");
 		amenitiesDAO.dodaj(amenities,contextPath);
+		
+//		HashMap<String,Amenities> amenityMap = new HashMap<String,Amenities>();
+//		amenityMap.put(amenities.getName(),amenities);
+//		amenitiesDAO.dodajuFile(amenityMap,contextPath);
+//		Collection<Amenities> amenitiess = amenitiesDAO.getAmenitiess().values();
 		
 //		try {
 //			amenitiesDAO.saveAmenities();
