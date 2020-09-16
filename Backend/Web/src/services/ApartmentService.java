@@ -1,13 +1,16 @@
 package services;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.PostConstruct;
+import javax.persistence.EnumType;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 //import javax.websocket.server.PathParam;
@@ -29,6 +32,8 @@ import beans.Admin;
 import beans.Apartment;
 import beans.ApartmentComment;
 import beans.AvailableDate;
+import beans.AvailableEnum;
+import beans.DayMonthYear;
 import beans.Guest;
 import beans.Host;
 import beans.Location;
@@ -233,7 +238,39 @@ public class ApartmentService {
 		ApartmentDAO apDAO = (ApartmentDAO)this.ctx.getAttribute("apartmentDAO");
 //		Apartment apartment = new Apartment();
 		String contextPath = ctx.getRealPath("");
-		List<AvailableDate> listaDatuma = new ArrayList<>();
+		HashMap<Date,AvailableEnum> listaDatuma = new HashMap<>();
+		Date now = new Date();
+		Date year = new Date();
+		year.setYear(now.getYear()+1);
+		boolean before = true;
+		Date i;
+//		Date j = new Date();
+		for(i = now; before; i.setDate(i.getDate()+1)) {
+			Date j = (Date) i.clone();	
+			listaDatuma.put(j,AvailableEnum.FREE);
+			before = now.before(year);
+			int day = i.getDate();
+			int m = i.getMonth();
+			int yy = i.getYear();
+			int y = year.getYear();
+			System.out.println(yy);
+		}
+//		for(Date i = now; before; i.setDate(i.getDate()+1)) {
+//			int day = i.getDate();
+//			int month = i.getMonth();
+//			int yearr = i.getYear();
+//			DayMonthYear dmy = new DayMonthYear(day,month,yearr);
+//			listaDatuma.put(dmy,AvailableEnum.FREE);
+//			before = now.before(year);
+//			int dayy = i.getDate();
+//			int m = i.getMonth();
+//			int yy = i.getYear();
+//			int y = year.getYear();
+//			System.out.println(yy);
+//		}
+//		for (Map.Entry<Date, AvailableEnum> date : listaDatuma.entrySet()) {
+//			date.setValue(AvailableEnum.FREE);
+//		}
 		List<ApartmentComment> listaKomentara = new ArrayList<>();
 		List<Reservation> listaRezervacija = new ArrayList<>();
 		apartment.setAppartmentDates(listaDatuma);
@@ -314,13 +351,13 @@ public class ApartmentService {
 	}
 	
 	@POST
-	@Path("/search")
+	@Path("/search/{availableFrom}/{availableTo}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response searchApartments(Apartment apartment, @Context HttpServletRequest request) {
+	public Response searchApartments(Apartment apartment, @PathParam("availableFrom") String availableFrom, @PathParam("availableTo") String availableTo, @Context HttpServletRequest request) throws ParseException {
 		ApartmentDAO apartmentDAO = (ApartmentDAO) ctx.getAttribute("apartmentDAO");
 		String contextPath = ctx.getRealPath("");
-		Collection<Apartment> apartments = apartmentDAO.searchApartments(apartment);
+		Collection<Apartment> apartments = apartmentDAO.searchApartments(apartment, availableFrom, availableTo);
 		return Response.status(200).entity(apartments).build();
 	}
 	
@@ -357,56 +394,32 @@ public class ApartmentService {
 //		return Response.status(200).build();
 //		
 //	}
-	@PUT
-	@Path("/comentVisible/{apartmentId}")
-	public Response changeVisibility(@PathParam("apartmentId") UUID apartmentId, @Context HttpServletRequest request, ApartmentComment comment) {
-		
-		ApartmentDAO apDao = (ApartmentDAO) this.ctx.getAttribute("apartmentDAO");
-		Apartment apartment = apDao.findById(apartmentId);
-	
-		for(ApartmentComment nCom : apartment.getComments()) {
-			if(nCom.Equals(comment)) {
-				nCom.setVisible(!nCom.isVisible());
-			}
-		}
-		try {
-			apDao.save();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return Response.status(500).build();
-		}
-		
-		return Response.ok().build();
-	}
-	@PUT
-	@Path("commentAdd/{apartment}/{guest}")
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Response addComment(ApartmentComment apComment, @Context HttpServletRequest request, @PathParam("apartment") UUID id,@PathParam("guest") String username) {
-		UserDAO userDAO = (UserDAO) this.ctx.getAttribute("userDAO");
-		Guest guest = (Guest) userDAO.findUsername(username);
-		
-		ApartmentDAO apDAO = (ApartmentDAO) this.ctx.getAttribute("apartmentDAO");
-		Apartment apartment = apDAO.findById(id);
-		
-		
-		apComment.setApartment(apartment);
-		apComment.setGuest(guest);
-		
-		apartment.getComments().add(apComment);
-		
-		apDAO.stavi(apartment);
-		
-		try {
-			apDAO.save();
-		} catch (Exception e) {
-			
-			e.printStackTrace();
-			return Response.status(500).build();
-		}
-		return Response.status(200).build();
-		
-	}
-	
+//	@PUT
+//	@Path("addComment/{guest}/{apartment}")
+//	@Consumes(MediaType.APPLICATION_JSON)
+//	public Response addCommentToApartment(ApartmentComment comment, @Context HttpServletRequest request,
+//			@PathParam("guest") String username, @PathParam("apartment") Long id) {
+//		UserDAO userDAO = (UserDAO) this.ctx.getAttribute("userDAO");
+//		Guest guest = (Guest) userDAO.searchUsers(username);
+//		
+//		ApartmentDAO apDAO = (ApartmentDAO) this.ctx.getAttribute("apartmentDAO");
+//		Apartment apartment = apDAO.find(id);
+//		
+//		comment.setGuest(guest);
+//		comment.setApartment(apartment);
+//		apartment.getComments().add(comment);
+//		
+//		apDAO.putApartment(apartment);
+//		
+//		try {
+//			apDAO.saveApartments();
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//			return Response.status(500).build();
+//		}
+//		
+//		return Response.status(200).build();	
+//	}
 
 }

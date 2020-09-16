@@ -48,13 +48,6 @@ public class UserDAO {
 		
 		return true;
 	}
-	public User findUsername(String username) {
-		User user = this.users.get(username);
-		if(user == null) {
-			return null;
-		}
-		return user;
-	}
 	
 	public User searchUsers(String u) {
 		if (!users.containsKey(u)) {

@@ -242,20 +242,27 @@ package dao;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
-import java.util.UUID;
+import java.util.List;
+import java.util.Map;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import beans.Amenities;
 import beans.Apartment;
+import beans.AvailableDate;
+import beans.AvailableEnum;
+import beans.DayMonthYear;
 
 public class ApartmentDAO {
 
 	private HashMap<String, Apartment> apartments = new HashMap<>();
-	private String contextPath;
 	
 	private ApartmentDAO() {
 		
@@ -290,23 +297,15 @@ public class ApartmentDAO {
 		
 		return true;
 	}
-	public Apartment findById(UUID Id) {
-		Apartment apartment = this.apartments.get(Id);
-		if(apartment == null) {
-			return null;
-		}
-		return apartment;
-	}
 	
-	
-	public Apartment searchApartments(String u) {
-		if (!apartments.containsKey(u)) {
-			return null;
-		}
-		Apartment apartment = apartments.get(u);
-	
-		return apartment;
-	}
+//	public Apartment searchApartments(String u) {
+//		if (!apartments.containsKey(u)) {
+//			return null;
+//		}
+//		Apartment apartment = apartments.get(u);
+//	
+//		return apartment;
+//	}
 	
 	public Collection<Apartment> findAll() {
 		return apartments.values();
@@ -400,11 +399,11 @@ public class ApartmentDAO {
 		return "ApartmentDAO [apartments=" + apartments + "]";
 	}
 	
-	public void stavi(Apartment apartment) {
+	public void stavi(Apartment restoran) {
 		// TODO Auto-generated method stub
 		
-		String str = String.valueOf(apartment.getId());
-		apartments.put(str, apartment);
+		String str = String.valueOf(restoran.getId());
+		apartments.put(str, restoran);
 		
 	}
 	
@@ -453,7 +452,8 @@ public class ApartmentDAO {
 	}
 	
 	
-	public Collection<Apartment> searchApartments(Apartment apartment) {
+	@SuppressWarnings("deprecation")
+	public Collection<Apartment> searchApartments(Apartment apartment, String availableFrom, String availableTo) throws ParseException {
 		Collection<Apartment> allApartments = getAllActive();
 		Collection<Apartment> apartments = new ArrayList<Apartment>();
 		for(Apartment iter : allApartments) {
@@ -472,6 +472,42 @@ public class ApartmentDAO {
 					continue;
 				}
 			}
+			
+			if(!(availableFrom.equals("null") || availableTo.equals("null"))) {
+//				if(apartment.getAppartmentDates()) {
+					
+//				}
+//				List<List<AvailableDate>> availableDates;
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
+				Date now = new Date();
+				Date noww = new Date();
+				noww.setDate(now.getDate()+1);
+				Date availableFromDate = sdf.parse(availableFrom);
+				Date availableToDate = sdf.parse(availableTo);
+				HashMap<Date,AvailableEnum> availableDates;
+				for(Apartment ap : allApartments) {
+					availableDates = ap.getAppartmentDates();
+					boolean before = true;
+					Date afd;
+					for(afd = availableFromDate; before; afd.setDate(afd.getDate()+1)) { //TODO mozes promeniti ove forove
+						Date j = (Date) afd.clone();
+						before = availableFromDate.before(availableToDate);
+						for(Map.Entry<Date, AvailableEnum> date : availableDates.entrySet()) {
+							Date datedate = date.getKey();
+							if((datedate.getDay() == j.getDay()) && (datedate.getMonth() == j.getMonth()) && (datedate.getYear() == j.getYear())) {
+								if(date.getValue().equals(AvailableEnum.TAKEN)) {
+									continue;
+								}
+							}
+							
+						}
+//						if(availableDates.get(j).equals(AvailableEnum.TAKEN)) {
+//							continue;
+//						}
+					}
+				}
+			}
+			
 			if(!(apartment.getPriceNight() == null)) {
 				if(apartment.getPriceNight() < iter.getPriceNight()) {
 					continue;
@@ -516,18 +552,39 @@ public class ApartmentDAO {
 			apartments.put(str,apartment);
 		}
 	}
-
-    public void save() throws Exception {
-		ObjectMapper objectMapper = new ObjectMapper();
-		
-		try {
-			objectMapper.writeValue(new File(this.contextPath + "/apartments.json"), this.apartments.values());
-		} catch (IOException e) {
-		// TODO Auto-generated catch block
-			e.printStackTrace();
-			throw new Exception("Greska pri upisivanju apartmana u fajlove");
+	
+	
+	public void amenityApartments(String oldAmenity, String newAmenity) {
+		ArrayList<Apartment> list = new ArrayList<Apartment>(this.findAll());
+		for(Apartment iter : list) {
+			if(iter.getAmenities() != null) {
+				ArrayList<String> iterAmenities = (ArrayList<String>) iter.getAmenities();
+				ArrayList<String> returnAmenities = (ArrayList<String>) iter.getAmenities();
+				for(String amenIter : iterAmenities) {
+					if(amenIter.equals(oldAmenity)) {
+						returnAmenities.remove(oldAmenity);
+						returnAmenities.add(newAmenity);
+						iter.setAmenities(returnAmenities);
+						String str = String.valueOf(iter.getId());
+						this.apartments.put(str, iter);
+						break;
+					}
+				}
+			}
 		}
-}
+		
+		
+	}
+
+//	public void save() {
+//		ObjectMapper objectMapper = new ObjectMapper();
+//		try {
+//			objectMapper.writeValue(new File(this.path + "/apartments.json"), this.apartments);
+//		} catch (IOException e) {
+//		// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//}
 
 }
 

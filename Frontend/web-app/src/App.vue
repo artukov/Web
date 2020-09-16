@@ -18,7 +18,7 @@
           <router-link to="/myApartments" v-if="this.$store.state.role == 'HOST'">My apartments</router-link>|
           <!-- <router-link to="/" @click="logout" v-if="this.$store.state.user != null">Logout</router-link>| -->
           <router-link to="/apartments">Apartments</router-link>|
-          
+          <router-link to="/amenities">Amenities</router-link>|
           <b-nav-item-dropdown text="Sidebar" left>
           <router-link to="/searchUsers">Search users</router-link>
           

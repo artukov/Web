@@ -8,6 +8,7 @@ import SearchUsers from "../views/SearchUsers.vue";
 import AddApartment from "../views/AddApartment.vue";
 import MyApartments from "../views/MyApartments.vue";
 import Apartments from "../views/Apartments.vue"
+import Amenities from "../views/Amenities.vue";
 
 Vue.use(VueRouter);
 
@@ -60,6 +61,11 @@ const routes = [
     path: '/apartments',
     name: 'Apartments',
     component: Apartments
+  },
+  {
+    path: '/amenities',
+    name: 'Amenities',
+    component: Amenities
   },
 ];
 
