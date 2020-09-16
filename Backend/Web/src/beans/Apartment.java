@@ -1,10 +1,12 @@
 package beans;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
-import org.apache.tomcat.jni.Time;
+//import org.apache.tomcat.jni.Time;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,7 +19,7 @@ public class Apartment {
 	private Integer numberRooms;
 	private Integer guestNumber;
 	private Integer location;
-	private List<AvailableDate> appartmentDates;
+	private HashMap<Date,AvailableEnum> appartmentDates;
 	private String host;
 	private List<ApartmentComment> comments;
 	private String image;
@@ -148,17 +150,6 @@ public class Apartment {
 //		this.id = UUID.randomUUID();
 //	}
 	
-	public Apartment(ApartmentType apartmentType, Integer numberRooms, Integer guestNumber, Integer location,
-			List<AvailableDate> appartmentDates) {
-		super();
-		this.apartmentType = apartmentType;
-		this.numberRooms = numberRooms;
-		this.guestNumber = guestNumber;
-		this.location = location;
-		this.appartmentDates = appartmentDates;
-		this.id = UUID.randomUUID();
-	}
-	
 	
 	
 //	public Long getId() {
@@ -197,10 +188,10 @@ public class Apartment {
 	public void setLocation(Integer location) {
 		this.location = location;
 	}
-	public List<AvailableDate> getAppartmentDates() {
+	public HashMap<Date,AvailableEnum> getAppartmentDates() {
 		return appartmentDates;
 	}
-	public void setAppartmentDates(List<AvailableDate> appartmentDates) {
+	public void setAppartmentDates(HashMap<Date,AvailableEnum> appartmentDates) {
 		this.appartmentDates = appartmentDates;
 	}
 	public String getHost() {

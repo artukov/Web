@@ -1,5 +1,16 @@
 <template>
   <div class="position">
+
+    <b-container v-if="error">
+      <b-alert show variant="danger" class="d-flex justify-content-center">{{errormessage}}</b-alert>
+    </b-container>
+
+     <b-container v-if="success">
+      <b-alert show variant="success" class="d-flex justify-content-center">{{successmessages}}</b-alert>
+    </b-container>
+
+
+
     <b-form @submit.prevent="onSubmit()" method="post">
       <b-form-group id="input-group-2" label="Username:" label-for="input-2">
         <b-form-input
@@ -38,9 +49,10 @@ export default {
         username: "",
       },
       users: [],
-      info: null,
       error: false,
-      errorMessage: "",
+      errormessage: "",
+      success: false,
+      successmessages: "",
     };
   },
   methods: {
@@ -68,7 +80,7 @@ export default {
         // 
       })
       .catch(error => {
-        this.errorMessage = "Bad credentials."
+        this.errormessage = "Bad credentials."
         this.error = true;
         error;
       })

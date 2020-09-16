@@ -220,12 +220,14 @@ public class AmenitiesDAO {
 //		}
 //	}
 //	
-//	public void change(Amenities amenities) {
-//		if(amenitiess.containsKey(amenities.getId())) {
-//			String str = String.valueOf(amenities.getId());
-//			amenitiess.put(str,amenities);
-//		}
-//	}
+	public void change(String oldName, String newName) {
+		if(amenitiess.containsKey(oldName)) {
+			Amenities amenity = new Amenities(newName);
+			Amenities a = amenitiess.put(oldName,amenity);
+
+			
+		}
+	}
 
 //	public void save() {
 //		ObjectMapper objectMapper = new ObjectMapper();

@@ -127,7 +127,7 @@ export default {
                 numberRooms: "",
                 guestNumber: "",
                 location: "",
-                // // appartmentDates: null,
+                // appartmentDates: null,
                 host: "",
                 // // comments: null,
                 priceNight: "",
@@ -154,7 +154,10 @@ export default {
             error: false,
             errormessage: "",
             success: false,
-            successmessages: ""
+            successmessages: "",
+            dates: [],
+            prvi: "",
+            god: ""
         }
     },
 
@@ -173,6 +176,18 @@ export default {
       },
 
       onSubmit() {
+        // let before = true;
+        // let i = Date();
+        // this.prvi = i;
+        // let year = Date();
+        // year.setDate(year.getDate()+365);
+        // this.god = year;
+        // for(i; before; i.setDate(i.getDate() + 1)) {
+        //   console.log("1");
+        //   before = false;
+        // }
+
+        
         // for(var user in this.users) {
         //   if(user.username === this.$store.state.user.data.username) {
         //     this.form.host = user;

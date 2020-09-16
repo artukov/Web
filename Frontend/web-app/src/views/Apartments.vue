@@ -41,6 +41,13 @@
         </b-form-select>
       </b-form-group>
 
+      <b-form-group id="input-group-5" label-for="input-5">
+          <label for="Form-DateFrom">Pickup date</label>
+          <input type="date" id="Form-availableFrom" class="form-control" v-model="date.availableFrom" />
+          <label for="Form-DateTo">Leaving date</label>
+          <input type="date" id="Form-availableTo" class="form-control" v-model="date.availableTo" />
+      </b-form-group>
+
       <b-form-group id="input-group-3" label="Price per night:" label-for="input-2">
         <b-form-input
           id="input-2"
@@ -165,6 +172,10 @@ export default {
                 appStatus: true,
                 // // reservations: null
             },
+            date: {
+              availableFrom: "null",
+              availableTo: "null"
+            },
             types: ["ROOM", "COMPLETE"],
             locations: [],
             amenities: [],
@@ -183,8 +194,7 @@ export default {
             console.log("2");
           }
         }
-        // this.address = this.form.location;
-        axios.post("Web/rest/apartment/search", this.form) 
+        axios.post("Web/rest/apartment/search/" + this.date.availableFrom + "/" + this.date.availableTo, this.form) 
           .then(response => {
             this.apartments = response.data;
             if(response.status == 200) {

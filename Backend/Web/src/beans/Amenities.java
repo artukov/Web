@@ -4,20 +4,20 @@ import java.util.UUID;
 
 public class Amenities {
 
-//	private UUID id;
+	private UUID id;
 	private String name;
 	public Amenities() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public Amenities(Long id, String name) {
+	public Amenities(UUID id, String name) {
 		super();
-//		this.id = id;
+		this.id = id;
 		this.name = name;
 	}
 	
 	public Amenities(String name) {
-//		this.id = UUID.randomUUID();
+		this.id = UUID.randomUUID();
 		this.name = name;
 	}
 	

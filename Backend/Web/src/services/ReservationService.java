@@ -4,17 +4,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -24,17 +20,15 @@ import beans.Address;
 import beans.Apartment;
 import beans.ApartmentType;
 import beans.AvailableDate;
-import beans.Guest;
-import beans.Host;
-import beans.User;
 import beans.Location;
 import beans.Reservation;
-import beans.ReservationStatus;
+import dao.AddressDAO;
 import dao.ApartmentDAO;
+import dao.LocationDAO;
 import dao.ReservationDAO;
 import dao.UserDAO;
 
-@Path("/reservation")
+@Path("")
 public class ReservationService {
 	
 	
@@ -93,101 +87,6 @@ public class ReservationService {
 		
 		
 		Collection<Reservation> reservations = reservationDAO.getReservations().values();
-		return Response.status(200).entity(reservations).build();
-	}
-	@GET
-	@Path("/all")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response getAll(@Context HttpServletRequest request) {
-		ReservationDAO resDAO = (ReservationDAO) this.ctx.getAttribute("reservationDAO");
-		Collection<Reservation> reservations = resDAO.getReservations().values();
-		return Response.ok().entity(reservations).build();
-	}
-	
-	@GET
-	@Path("/hostAll/{hostUsername}")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response getAllHostReservations(@Context HttpServletRequest request, @PathParam("hostUsername") String hostUsername) {
-		UserDAO dao = (UserDAO)this.ctx.getAttribute("userDAO");
-		
-		Host host = (Host)dao.searchUsers(hostUsername);
-		if(host == null) {
-			return Response.status(400).entity("Pogresan korisnika").build();
-		}
-		ReservationDAO resDAO = (ReservationDAO)this.ctx.getAttribute("reservationDAO");
-
-		Collection<Reservation> reservations = resDAO.getReservations().values();
-		Collection<Reservation> hostRes= new ArrayList<Reservation>();
-		
-		for(Reservation res : reservations) {
-			if(res.getApartment().getHost() == host.getUsername()) {
-				hostRes.add(res);
-			}
-		}
-		
-		return Response.status(200).entity(hostRes).build();
-	}
-	
-	@GET
-	@Path("/guestAll/{guestUsername}")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response getAllGuestReservations(@Context HttpServletRequest request, @PathParam("guestUsername") String guestUsername) {
-		UserDAO dao = (UserDAO)this.ctx.getAttribute("userDAO");
-		
-		Guest guest = (Guest)dao.searchUsers(guestUsername);
-		if(guest == null) {
-			return Response.status(400).entity("Pogresan korisnika").build();
-		}
-		ReservationDAO resDAO = (ReservationDAO)this.ctx.getAttribute("reservationDAO");
-
-		Collection<Reservation> reservations = resDAO.getReservations().values();
-		
-		
-		return Response.status(200).entity(reservations).build();
-	}
-	
-	@POST
-	@Path("/new")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response createNewReservation(Reservation reservation, @Context HttpServletRequest request) {
-		ReservationDAO resDAO=(ReservationDAO)this.ctx.getAttribute("reservationDAO");
-		
-		String contextPath = ctx.getRealPath("");
-		
-		Collection<Reservation> reservations = resDAO.getReservations().values();
-
-		resDAO.dodaj(reservation, contextPath);
-		return Response.status(200).entity(reservations).build();
-		
-	}
-	
-	@PUT
-	@Path("/changeStatus/{id}")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response reservationStatus(@Context HttpServletRequest request, @PathParam("id") UUID id,ReservationStatus resStatus) {
-		ReservationDAO reservationDAO = (ReservationDAO) this.ctx.getAttribute("reservationDAO");
-		String contextPath = ctx.getRealPath("");
-		Collection<Reservation> reservations = reservationDAO.getReservations().values();
-		for(Reservation res : reservations) {
-			if(id.equals(res.getId())) {
-				res.setStatusRes(resStatus);
-				reservationDAO.dodaj(res,contextPath);
-			}
-		}
-		return Response.status(200).entity(reservations).build();
-	}
-	@POST
-	@Path("/search")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response searchReservations(Reservation reservation, @Context HttpServletRequest request) {
-		ReservationDAO reservationDAO = (ReservationDAO) ctx.getAttribute("reservationDAO");
-		String contextPath = ctx.getRealPath("");
-		Collection<Reservation> reservations = (Collection<Reservation>) reservationDAO.searchReservations(reservation);
 		return Response.status(200).entity(reservations).build();
 	}
 
