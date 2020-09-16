@@ -245,6 +245,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.UUID;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -254,6 +255,7 @@ import beans.Apartment;
 public class ApartmentDAO {
 
 	private HashMap<String, Apartment> apartments = new HashMap<>();
+	private String contextPath;
 	
 	private ApartmentDAO() {
 		
@@ -288,6 +290,14 @@ public class ApartmentDAO {
 		
 		return true;
 	}
+	public Apartment findById(UUID Id) {
+		Apartment apartment = this.apartments.get(Id);
+		if(apartment == null) {
+			return null;
+		}
+		return apartment;
+	}
+	
 	
 	public Apartment searchApartments(String u) {
 		if (!apartments.containsKey(u)) {
@@ -390,11 +400,11 @@ public class ApartmentDAO {
 		return "ApartmentDAO [apartments=" + apartments + "]";
 	}
 	
-	public void stavi(Apartment restoran) {
+	public void stavi(Apartment apartment) {
 		// TODO Auto-generated method stub
 		
-		String str = String.valueOf(restoran.getId());
-		apartments.put(str, restoran);
+		String str = String.valueOf(apartment.getId());
+		apartments.put(str, apartment);
 		
 	}
 	
@@ -507,15 +517,17 @@ public class ApartmentDAO {
 		}
 	}
 
-//	public void save() {
-//		ObjectMapper objectMapper = new ObjectMapper();
-//		try {
-//			objectMapper.writeValue(new File(this.path + "/apartments.json"), this.apartments);
-//		} catch (IOException e) {
-//		// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//}
+    public void save() throws Exception {
+		ObjectMapper objectMapper = new ObjectMapper();
+		
+		try {
+			objectMapper.writeValue(new File(this.contextPath + "/apartments.json"), this.apartments.values());
+		} catch (IOException e) {
+		// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new Exception("Greska pri upisivanju apartmana u fajlove");
+		}
+}
 
 }
 

@@ -52,7 +52,20 @@ public class ApartmentComment {
 	public void setGrade(Integer grade) {
 		Grade = grade;
 	}
-	
+	public boolean Equals(ApartmentComment comment) {
+		// TODO Auto-generated method stub
+		if(this.getGuest() != comment.getGuest()) {
+			return false;
+		}
+		if(this.getGrade() != comment.getGrade()) {
+			return false;
+		}
+		if(this.getText() != comment.getText()) {
+			return false;
+		}
+		
+		return true;
+	}
 	
 	
 	

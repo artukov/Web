@@ -121,7 +121,7 @@ public class ReservationService {
 		Collection<Reservation> hostRes= new ArrayList<Reservation>();
 		
 		for(Reservation res : reservations) {
-			if(res.getApartment().getHost().getUsername() == host.getUsername()) {
+			if(res.getApartment().getHost() == host.getUsername()) {
 				hostRes.add(res);
 			}
 		}
