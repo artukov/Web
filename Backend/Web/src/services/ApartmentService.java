@@ -357,32 +357,56 @@ public class ApartmentService {
 //		return Response.status(200).build();
 //		
 //	}
-//	@PUT
-//	@Path("addComment/{guest}/{apartment}")
-//	@Consumes(MediaType.APPLICATION_JSON)
-//	public Response addCommentToApartment(ApartmentComment comment, @Context HttpServletRequest request,
-//			@PathParam("guest") String username, @PathParam("apartment") Long id) {
-//		UserDAO userDAO = (UserDAO) this.ctx.getAttribute("userDAO");
-//		Guest guest = (Guest) userDAO.searchUsers(username);
-//		
-//		ApartmentDAO apDAO = (ApartmentDAO) this.ctx.getAttribute("apartmentDAO");
-//		Apartment apartment = apDAO.find(id);
-//		
-//		comment.setGuest(guest);
-//		comment.setApartment(apartment);
-//		apartment.getComments().add(comment);
-//		
-//		apDAO.putApartment(apartment);
-//		
-//		try {
-//			apDAO.saveApartments();
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//			return Response.status(500).build();
-//		}
-//		
-//		return Response.status(200).build();	
-//	}
+	@PUT
+	@Path("/comentVisible/{apartmentId}")
+	public Response changeVisibility(@PathParam("apartmentId") UUID apartmentId, @Context HttpServletRequest request, ApartmentComment comment) {
+		
+		ApartmentDAO apDao = (ApartmentDAO) this.ctx.getAttribute("apartmentDAO");
+		Apartment apartment = apDao.findById(apartmentId);
+	
+		for(ApartmentComment nCom : apartment.getComments()) {
+			if(nCom.Equals(comment)) {
+				nCom.setVisible(!nCom.isVisible());
+			}
+		}
+		try {
+			apDao.save();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return Response.status(500).build();
+		}
+		
+		return Response.ok().build();
+	}
+	@PUT
+	@Path("commentAdd/{apartment}/{guest}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response addComment(ApartmentComment apComment, @Context HttpServletRequest request, @PathParam("apartment") UUID id,@PathParam("guest") String username) {
+		UserDAO userDAO = (UserDAO) this.ctx.getAttribute("userDAO");
+		Guest guest = (Guest) userDAO.findUsername(username);
+		
+		ApartmentDAO apDAO = (ApartmentDAO) this.ctx.getAttribute("apartmentDAO");
+		Apartment apartment = apDAO.findById(id);
+		
+		
+		apComment.setApartment(apartment);
+		apComment.setGuest(guest);
+		
+		apartment.getComments().add(apComment);
+		
+		apDAO.stavi(apartment);
+		
+		try {
+			apDAO.save();
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+			return Response.status(500).build();
+		}
+		return Response.status(200).build();
+		
+	}
+	
 
 }
