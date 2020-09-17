@@ -4,13 +4,13 @@
 
         <div class="position">
 
-    <!-- <b-container v-if="error">
+    <b-container v-if="error">
       <b-alert show variant="danger" class="d-flex justify-content-center">{{errormessage}}</b-alert>
     </b-container>
 
      <b-container v-if="success">
       <b-alert show variant="success" class="d-flex justify-content-center">{{successmessages}}</b-alert>
-    </b-container> -->
+    </b-container>
 
     <b-form @submit.prevent="onSubmit" method="get">
 
@@ -91,7 +91,7 @@
       <b-alert show variant="success" class="d-flex justify-content-center">{{successmessages}}</b-alert>
     </b-container> -->
 
-    <div class="child d-flex justify-content-left" style="margin-top: 20px">
+    <div class="child d-flex justify-content-left" style="margin-top: 20px" v-if="showAll">
     
     <div class="card" style="width: 50%">
       
@@ -137,7 +137,7 @@
                                 <button
                                 type="button"
                                 class="btn btn-primary btn-block z-depth-2"
-                                @click="reserve(activeApartment.id)"
+                                @click="pickApartment(activeApartment)"
                                 >Reserve apartment</button>
                             </div>
                             
@@ -152,9 +152,109 @@
                     </div>
                 </div>
             </div>
+        </div>   
+    </div>
+    </div>
+
+
+
+
+
+    <div class="child d-flex justify-content-left" style="margin-top: 20px" v-if="!showAll">
+    
+    <div class="card" style="width: 50%">
+      
+        <div class="header pt-3 grey lighten-2">
+            <div class="row d-flex justify-content-start">
+                <h3 class="deep-grey-text mt-3 mb-4 pb-1 mx-5"
+                style="font-size: 2rem;
+                font-weight: 300;
+                line-height: 1.2;
+                margin-top: -12%;">Apartment for reservation</h3>
+            </div>
         </div>
+
+            <div class="card-body mx-4 mt-4">
+                <div class="row">
+                    <div class="col">
+                        <div class="md-form">
+                            <label for="Form-rooms">Number of rooms</label>
+                            <label id="Form-rooms" class="form-control">{{activeApartment.numberRooms}}</label>
+
+                            <label for="Form-guests">Number of guests</label>
+                            <label id="Form-guests" class="form-control">{{activeApartment.guestNumber}}</label>
+
+                            <!-- <label for="Form-surname">Location</label>
+                            <label id="Form-surname" class="form-control">{{activeApartment.location}}</label> -->
+
+                            <div v-for="location in locations"  :value="location.longitude"
+            :key="location.longitude">
+                              <div v-if="location.longitude == form.location || form.location == ''">
+                                <label for="Form-surname">Location</label>
+                                <label id="Form-surname" class="form-control">{{location.address.city}}, {{location.address.street}} {{location.address.number}}</label>
+                              </div>
+                            </div>
+
+
+
+                            <label for="Form-surname">Price per night</label>
+                            <label id="Form-surname" class="form-control">{{activeApartment.priceNight}}</label>
+                            <br/>
+
+
+
+
+
+<div class="header pt-3 grey lighten-2">
+            <div class="row d-flex justify-content-start">
+                <h3 class="deep-grey-text mt-3 mb-4 pb-1 mx-5"
+                style="font-size: 2rem;
+                font-weight: 300;
+                line-height: 1.2;
+                margin-top: -12%;">Reservation</h3>
+            </div>
+        </div>
+
+
+                        <div class="md-form">
+                            <label for="Form-rooms">Reservation date</label>
+                            <!-- <label id="Form-rooms" class="form-control" v-if="date.availableFrom != 'null'">{{date.availableFrom}}</label>
+                            <label id="Form-rooms" class="form-control" v-if="date.availableFrom == 'null'"></label> -->
+                            <input type="date" id="Form-availableFrom" class="form-control" v-model="formReservation.startDate" required/>
+
+                            <label for="Form-guests">Number of days</label>
+                            <input id="Form-guests" type="number" class="form-control" v-model="formReservation.numberNights" required>
+
+                            <label for="Form-surname">Message for host</label>
+                            <input id="Form-surname" class="form-control" v-model="formReservation.reservationMessage" required>
+                            
+                            <br/>
+                        </div>
+                            <div class="text-center mb-4">
+                                <button
+                                type="button"
+                                class="btn btn-primary btn-block z-depth-2"
+                                @click="reserve()"
+                                >Reserve apartment</button>
+                            </div>
+                            
+                            <!-- <div v-if="client.blocked" class="text-center mb-4">
+                                <button
+                                type="button"
+                                class="btn btn-secondary btn-block z-depth-2"
+                                @click="unblock(client.id)"
+                                >Unblock</button>
+                            </div> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
     </div>
     </div>
+
+
+
+
     </div>
 </template>
 
@@ -179,11 +279,27 @@ export default {
               availableFrom: "null",
               availableTo: "null"
             },
+            formReservation: {
+              apartment: "",
+              startDate: "null",
+              numberNights: "",
+              // fullPrice: 5.0,
+              reservationMessage: "",
+              guest: "",
+              // statusRes: "CREATED"
+            },
             types: ["ROOM", "COMPLETE"],
             locations: [],
             amenities: [],
             localFields: { text: 'name' },
-            address: ""
+            address: "",
+            showAll: true,
+            activeApartment: "",
+            reservations: [],
+            error: false,
+            errormessage: "",
+            success: false,
+            successmessages: "",
             
         }
     },
@@ -207,6 +323,31 @@ export default {
           .catch(error => {
             console.log(error);
           })
+      },
+
+      pickApartment(apartment) {
+        this.showAll = false;
+        this.activeApartment = apartment;
+        console.log(apartment);
+        this.formReservation.startDate = this.date.availableFrom;
+      },
+
+      reserve() {
+        this.formReservation.apartment = this.activeApartment;
+        this.formReservation.guest = this.$store.state.user.data.username;
+        axios.post("Web/rest/addReservation/" + this.formReservation.startDate + "/" + this.formReservation.numberNights + "/" + this.formReservation.reservationMessage + "/" + this.formReservation.guest, this.activeApartment)
+        .then(response => {
+          this.reservations = response.data;
+          console.log("ide gaaaaaaaaas");
+          this.success = true;
+          this.successmessages = "You have successfully reserved an apartment."
+          this.error = false;
+        })
+        .catch(error => {
+          console.log(error);
+          this.errormessage = "Dates not available.";
+          this.error = true;
+      })
       }
     },
 

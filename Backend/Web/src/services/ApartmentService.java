@@ -249,7 +249,7 @@ public class ApartmentService {
 //		Date j = new Date();
 		for(i = now; before; i.setDate(i.getDate()+1)) {
 			Date j = (Date) i.clone();	
-			listaDatuma.put(j,AvailableEnum.FREE);
+			listaDatuma.put(j,AvailableEnum.TAKEN);
 			before = now.before(year);
 			int day = i.getDate();
 			int m = i.getMonth();

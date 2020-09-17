@@ -5,11 +5,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.UUID;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import beans.Reservation;
+import beans.ReservationStatus;
 
 public class ReservationDAO {
 
@@ -215,6 +217,48 @@ public class ReservationDAO {
 		if(reservations.containsKey(reservation.getId())) {
 			String str = String.valueOf(reservation.getId());
 			reservations.put(str,reservation);
+		}
+	}
+	
+	public Collection<Reservation> getGuestReservations(String user) {
+		Collection<Reservation> allReservations = this.reservations.values();
+		Collection<Reservation> returnReservations = new ArrayList<Reservation>();
+		if(allReservations != null) {
+			for(Reservation reservation : allReservations) {
+				if(reservation.getGuest().equals(user)) {
+					returnReservations.add(reservation);
+				}
+			}
+		}
+		return returnReservations;
+	}
+	
+	public Collection<Reservation> getHostReservations(String user) {
+		Collection<Reservation> allReservations = this.reservations.values();
+		Collection<Reservation> returnReservations = new ArrayList<Reservation>();
+		if(allReservations != null) {
+			for(Reservation reservation : allReservations) {
+				if(reservation.getApartment().getHost().equals(user)) {
+					returnReservations.add(reservation);
+				}
+			}
+		}
+		return returnReservations;
+	}
+	
+	
+	public void withdraw(UUID id) {
+		Collection<Reservation> allReservations = this.reservations.values();
+		if(allReservations != null) {
+			for(Reservation res : allReservations) {
+				if(res.getId().equals(id)) {
+					if(res.getStatusRes().equals(ReservationStatus.CREATED)  || res.getStatusRes().equals(ReservationStatus.ACCEPTED)) {
+						res.setStatusRes(ReservationStatus.WITHDRAWAL);
+						String str = String.valueOf(res.getId());
+						this.reservations.put(str, res);
+					}
+				}
+			}
 		}
 	}
 

@@ -225,7 +225,7 @@ export default {
         //   console.log(error);
         // });
 
-        axios.get("/Web/rest/apartment/hostAllActive/uganda")
+        axios.get("/Web/rest/apartment/hostAllActive/" + this.$store.state.user.data.username)
         .then(response => {
           this.activeApartments = response.data;
           if(response.status == 200) {

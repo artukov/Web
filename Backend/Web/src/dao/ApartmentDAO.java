@@ -457,6 +457,7 @@ public class ApartmentDAO {
 		Collection<Apartment> allApartments = getAllActive();
 		Collection<Apartment> apartments = new ArrayList<Apartment>();
 		for(Apartment iter : allApartments) {
+			boolean cont = false;
 			if(!(apartment.getNumberRooms() == null)) {
 				if(!apartment.getNumberRooms().equals(iter.getNumberRooms())) {
 					continue;
@@ -485,8 +486,8 @@ public class ApartmentDAO {
 				Date availableFromDate = sdf.parse(availableFrom);
 				Date availableToDate = sdf.parse(availableTo);
 				HashMap<Date,AvailableEnum> availableDates;
-				for(Apartment ap : allApartments) {
-					availableDates = ap.getAppartmentDates();
+//				for(Apartment ap : allApartments) {
+					availableDates = iter.getAppartmentDates();
 					boolean before = true;
 					Date afd;
 					for(afd = availableFromDate; before; afd.setDate(afd.getDate()+1)) { //TODO mozes promeniti ove forove
@@ -494,18 +495,34 @@ public class ApartmentDAO {
 						before = availableFromDate.before(availableToDate);
 						for(Map.Entry<Date, AvailableEnum> date : availableDates.entrySet()) {
 							Date datedate = date.getKey();
-							if((datedate.getDay() == j.getDay()) && (datedate.getMonth() == j.getMonth()) && (datedate.getYear() == j.getYear())) {
-								if(date.getValue().equals(AvailableEnum.TAKEN)) {
-									continue;
+							int dateDan = datedate.getDate();
+							int dateMesec = datedate.getMonth();
+							int dateGod = datedate.getYear();
+							int jDan = j.getDate();
+							int jMesec = j.getMonth();
+							int jGod = j.getYear();
+							AvailableEnum ajmo = date.getValue();
+							AvailableEnum proba = AvailableEnum.TAKEN;
+//							if((datedate.getDay() == j.getDay()) && (datedate.getMonth() == j.getMonth()) && (datedate.getYear() == j.getYear())) {
+							if((datedate.getDate() == j.getDate()) && (datedate.getMonth() == j.getMonth())) {
+//								 && (datedate.getMonth() == j.getMonth())
+							if(date.getValue() == proba) {
+									int dateDand = datedate.getDate();
+									int dateMesecd = datedate.getMonth();
+									int dateGodd = datedate.getYear();
+									int jDand = j.getDate();
+									int jMesecd = j.getMonth();
+									int jGodd = j.getYear();
+									cont = true;
+									break;
 								}
 							}
-							
 						}
-//						if(availableDates.get(j).equals(AvailableEnum.TAKEN)) {
-//							continue;
-//						}
 					}
-				}
+//				}
+			}
+			if(cont) {
+				continue;
 			}
 			
 			if(!(apartment.getPriceNight() == null)) {
