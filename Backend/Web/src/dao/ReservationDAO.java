@@ -247,13 +247,44 @@ public class ReservationDAO {
 	}
 	
 	
-	public void withdraw(UUID id) {
+	public void withdrawReservation(UUID id) {
 		Collection<Reservation> allReservations = this.reservations.values();
 		if(allReservations != null) {
 			for(Reservation res : allReservations) {
 				if(res.getId().equals(id)) {
 					if(res.getStatusRes().equals(ReservationStatus.CREATED)  || res.getStatusRes().equals(ReservationStatus.ACCEPTED)) {
 						res.setStatusRes(ReservationStatus.WITHDRAWAL);
+						String str = String.valueOf(res.getId());
+						this.reservations.put(str, res);
+					}
+				}
+			}
+		}
+	}
+	
+	public void acceptReservation(UUID id) {
+		Collection<Reservation> allReservations = this.reservations.values();
+		if(allReservations != null) {
+			for(Reservation res : allReservations) {
+				if(res.getId().equals(id)) {
+					if(res.getStatusRes().equals(ReservationStatus.CREATED)) {
+						res.setStatusRes(ReservationStatus.ACCEPTED);
+						String str = String.valueOf(res.getId());
+						this.reservations.put(str, res);
+					}
+				}
+			}
+		}
+	}
+	
+	
+	public void denyReservation(UUID id) {
+		Collection<Reservation> allReservations = this.reservations.values();
+		if(allReservations != null) {
+			for(Reservation res : allReservations) {
+				if(res.getId().equals(id)) {
+					if(res.getStatusRes().equals(ReservationStatus.CREATED)  || res.getStatusRes().equals(ReservationStatus.ACCEPTED)) {
+						res.setStatusRes(ReservationStatus.DENIED);
 						String str = String.valueOf(res.getId());
 						this.reservations.put(str, res);
 					}

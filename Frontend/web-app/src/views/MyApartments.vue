@@ -136,7 +136,43 @@
                     </div>
                 </div>
             </div>
+          <div class="header pt-3 grey lighten-2">
+              <div class="row d-flex justify-content-start">
+                  <h3 class="deep-grey-text mt-3 mb-4 pb-1 mx-5"
+                  style="font-size: 2rem;
+                  font-weight: 300;
+                  line-height: 1.2;
+                  margin-top: -12%;">Comments for inactive</h3>
+              </div>
+          </div>
+
+
+          <!-- <div class="form-group" v-for="comment in comments" :key="comment.text">
+              <div class="card-body mx-4 mt-4" v-if="inactiveApartment.id == comment.apartment.id">
+                  <div class="row">
+                      <div class="col">
+                          <div class="md-form">
+                              <label for="Form-type">Guest</label>
+                              <label id="Form-type" class="form-control">{{comment.guest}}</label>
+
+                              <label for="Form-rooms">Grade</label>
+                              <label id="Form-rooms" class="form-control">{{comment.grade}}</label>
+
+                              <label for="Form-guests">Comment</label>
+                              <label id="Form-guests" class="form-control">{{comment.text}}</label>
+                              <br/>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div> -->
         </div>
+
+
+
+
+
+
     </div>
   </div>
   </div>
@@ -154,7 +190,8 @@ export default {
             error: false,
             errormessage: "",
             success: false,
-            successmessages: ""
+            successmessages: "",
+            comments: []
         }
     },
 
@@ -246,6 +283,16 @@ export default {
         .catch(error => {
           console.log(error);
         });
+
+
+      // axios.post("/Web/rest/apartment/commentsHost/" + this.$store.state.user.data.username)
+      // .then(response => {
+      //   this.comments = response.data;
+      // })
+      // .then(error => {
+      //   console.log(error);
+      // })
+
     }
 }
 </script>

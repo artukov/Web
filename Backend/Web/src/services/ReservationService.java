@@ -173,8 +173,32 @@ public class ReservationService {
 	public Response withdrawReservation(@PathParam("id") UUID id, @PathParam("username") String username, @Context HttpServletRequest request) {
 		ReservationDAO reservationDAO = (ReservationDAO) this.ctx.getAttribute("reservationDAO");
 		String contextPath = ctx.getRealPath("");
-		reservationDAO.withdraw(id);
+		reservationDAO.withdrawReservation(id);
 		Collection<Reservation> reservations = reservationDAO.getGuestReservations(username);
+		return Response.status(200).entity(reservations).build();
+	}
+	
+	@PUT
+	@Path("denyReservation/{id}/{username}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response denyReservation(@PathParam("id") UUID id, @PathParam("username") String username, @Context HttpServletRequest request) {
+		ReservationDAO reservationDAO = (ReservationDAO) this.ctx.getAttribute("reservationDAO");
+		String contextPath = ctx.getRealPath("");
+		reservationDAO.denyReservation(id);
+		Collection<Reservation> reservations = reservationDAO.getHostReservations(username);
+		return Response.status(200).entity(reservations).build();
+	}
+	
+	@PUT
+	@Path("acceptReservation/{id}/{username}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response acceptReservation(@PathParam("id") UUID id, @PathParam("username") String username, @Context HttpServletRequest request) {
+		ReservationDAO reservationDAO = (ReservationDAO) this.ctx.getAttribute("reservationDAO");
+		String contextPath = ctx.getRealPath("");
+		reservationDAO.acceptReservation(id);
+		Collection<Reservation> reservations = reservationDAO.getHostReservations(username);
 		return Response.status(200).entity(reservations).build();
 	}
 }

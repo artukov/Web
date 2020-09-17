@@ -256,6 +256,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import beans.Amenities;
 import beans.Apartment;
+import beans.ApartmentComment;
 import beans.AvailableDate;
 import beans.AvailableEnum;
 import beans.DayMonthYear;
@@ -564,8 +565,9 @@ public class ApartmentDAO {
 	}
 	
 	public void change(Apartment apartment) {
-		if(apartments.containsKey(apartment.getId())) {
-			String str = String.valueOf(apartment.getId());
+		String str = String.valueOf(apartment.getId());
+		if(apartments.containsKey(str)) {
+//			String str = String.valueOf(apartment.getId());
 			apartments.put(str,apartment);
 		}
 	}
@@ -591,6 +593,20 @@ public class ApartmentDAO {
 		}
 		
 		
+	}
+	
+	
+	public Collection<ApartmentComment> allCommentsHost(String user) {
+		List<ApartmentComment> allCommentsHost = new ArrayList<ApartmentComment>();
+		Collection<Apartment> apartments = this.apartments.values();
+		for(Apartment apartment : apartments) {
+			if(apartment.getHost().equals(user)) {
+				for(ApartmentComment comment : apartment.getComments()) {
+					allCommentsHost.add(comment);
+				}
+			}
+		}
+		return allCommentsHost;
 	}
 
 //	public void save() {

@@ -44,7 +44,7 @@
                                     <label id="Form-surname" class="form-control">{{reservation.statusRes}}</label>
                                     <br/>
 
-                                    <div class="text-center mb-4" v-if="reservation.statusRes == 'CREATED' || 'ACCEPTED'">
+                                    <div class="text-center mb-4" v-if="reservation.statusRes == 'CREATED' || reservation.statusRes == 'ACCEPTED'">
                                         <button
                                         type="button"
                                         class="btn btn-danger btn-block z-depth-2"
@@ -102,12 +102,20 @@
                                     <label id="Form-surname" class="form-control">{{reservation.statusRes}}</label>
                                     <br/>
 
-                                    <div class="text-center mb-4">
+                                    <div class="text-center mb-4" v-if="reservation.statusRes == 'CREATED'">
+                                        <button
+                                        type="button"
+                                        class="btn btn-primary btn-block z-depth-2"
+                                        @click="Accept(reservation.id)"
+                                        >Accept</button>
+                                    </div>
+
+                                    <div class="text-center mb-4" v-if="reservation.statusRes == 'CREATED' || reservation.statusRes == 'ACCEPTED'">
                                         <button
                                         type="button"
                                         class="btn btn-danger btn-block z-depth-2"
-                                        @click="Deactivate(reservation.id)"
-                                        >Deactivate</button>
+                                        @click="Deny(reservation.id)"
+                                        >Deny</button>
                                     </div>
                                     
                                     <!-- <div v-if="client.blocked" class="text-center mb-4">
@@ -218,6 +226,37 @@ export default {
             axios.put("Web/rest/withdrawReservation/" + id + "/" + this.$store.state.user.data.username)
             .then(response => {
                 this.guestReservations = response.data;
+                this.success = true;
+                this.successmessages = "You have successfully changed reservation status."
+                this.error = false;
+            })
+            .catch(error => {
+                this.errormessage = "Error occurred while changing reservation status.";
+                this.error = true;
+                console.log(error);
+            })
+        },
+
+        Deny(id) {
+            axios.put("Web/rest/denyReservation/" + id + "/" + this.$store.state.user.data.username)
+            .then(response => {
+                this.hostReservations = response.data;
+                this.success = true;
+                this.successmessages = "You have successfully changed reservation status."
+                this.error = false;
+            })
+            .catch(error => {
+                this.errormessage = "Error occurred while changing reservation status.";
+                this.error = true;
+                console.log(error);
+            })
+        },
+
+
+        Accept(id) {
+            axios.put("Web/rest/acceptReservation/" + id + "/" + this.$store.state.user.data.username)
+            .then(response => {
+                this.hostReservations = response.data;
                 this.success = true;
                 this.successmessages = "You have successfully changed reservation status."
                 this.error = false;

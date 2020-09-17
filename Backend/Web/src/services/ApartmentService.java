@@ -396,16 +396,16 @@ public class ApartmentService {
 //		return Response.status(200).build();
 //		
 //	}
+	
+	
 //	@PUT
 //	@Path("addComment/{guest}/{apartment}")
 //	@Consumes(MediaType.APPLICATION_JSON)
 //	public Response addCommentToApartment(ApartmentComment comment, @Context HttpServletRequest request,
-//			@PathParam("guest") String username, @PathParam("apartment") Long id) {
+//			@PathParam("guest") String username, @PathParam("apartment") Apartment apartment) {
 //		UserDAO userDAO = (UserDAO) this.ctx.getAttribute("userDAO");
-//		Guest guest = (Guest) userDAO.searchUsers(username);
 //		
 //		ApartmentDAO apDAO = (ApartmentDAO) this.ctx.getAttribute("apartmentDAO");
-//		Apartment apartment = apDAO.find(id);
 //		
 //		comment.setGuest(guest);
 //		comment.setApartment(apartment);
@@ -422,6 +422,67 @@ public class ApartmentService {
 //		}
 //		
 //		return Response.status(200).build();	
+//	}
+	
+//	@PUT
+//	@Path("addComment/{apartment}")
+//	@Consumes(MediaType.APPLICATION_JSON)
+//	public Response addCommentToApartment(ApartmentComment comment, Apartment apartment, @Context HttpServletRequest request) {
+//		UserDAO userDAO = (UserDAO) this.ctx.getAttribute("userDAO");
+//		
+//		ApartmentDAO apDAO = (ApartmentDAO) this.ctx.getAttribute("apartmentDAO");
+//		
+//		comment.setApartment(apartment);
+//		apartment.getComments().add(comment);
+//		
+//		apDAO.change(apartment);
+//		
+//		Collection<ApartmentComment> comments = apartment.getComments();
+//		
+////		try {
+////			apDAO.saveApartments();
+////		} catch (Exception e) {
+////			// TODO Auto-generated catch block
+////			e.printStackTrace();
+////			return Response.status(500).build();
+////		}
+//		
+//		return Response.status(200).entity(comments).build();	
+//	}
+	
+	
+	@POST
+	@Path("addComment/{text}/{grade}/{username}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response addCommentToApartment(Apartment apartment, @PathParam("text") String text, @PathParam("grade") Integer grade, @PathParam("username") String username, @Context HttpServletRequest request) {
+		UserDAO userDAO = (UserDAO) this.ctx.getAttribute("userDAO");
+		
+		ApartmentDAO apDAO = (ApartmentDAO) this.ctx.getAttribute("apartmentDAO");
+		ApartmentComment comment = new ApartmentComment(username,apartment,text,grade,true);
+		apartment.getComments().add(comment);
+		apDAO.change(apartment);
+		Collection<ApartmentComment> comments = apartment.getComments();
+		
+//		try {
+//			apDAO.saveApartments();
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//			return Response.status(500).build();
+//		}
+		
+		return Response.status(200).entity(comments).build();	
+	}
+	
+	
+//	@POST
+//	@Path("commentsHost/{username}")
+//	@Consumes(MediaType.APPLICATION_JSON)
+//	@Produces(MediaType.APPLICATION_JSON)
+//	public Response getCommentsHost(@PathParam("username") String username, @Context HttpServletRequest request) {
+//		ApartmentDAO apartmentDAO = (ApartmentDAO) this.ctx.getAttribute("apartmentDAO");
+//		Collection<ApartmentComment> comments = apartmentDAO.allCommentsHost(username);
+//		return Response.status(200).entity(comments).build();
 //	}
 
 }
