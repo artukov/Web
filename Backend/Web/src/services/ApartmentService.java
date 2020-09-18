@@ -1,6 +1,7 @@
 package services;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -40,6 +41,7 @@ import beans.Guest;
 import beans.Host;
 import beans.Location;
 import beans.Reservation;
+import beans.ReservationStatus;
 import beans.User;
 import dao.ApartmentDAO;
 import dao.LocationDAO;
@@ -240,7 +242,7 @@ public class ApartmentService {
 		ApartmentDAO apDAO = (ApartmentDAO)this.ctx.getAttribute("apartmentDAO");
 //		Apartment apartment = new Apartment();
 		String contextPath = ctx.getRealPath("");
-		HashMap<Date,AvailableEnum> listaDatuma = new HashMap<>();
+		HashMap<Date,ReservationStatus> listaDatuma = new HashMap<>();
 		Date now = new Date();
 		Date year = new Date();
 		year.setYear(now.getYear()+1);
@@ -249,7 +251,7 @@ public class ApartmentService {
 //		Date j = new Date();
 		for(i = now; before; i.setDate(i.getDate()+1)) {
 			Date j = (Date) i.clone();	
-			listaDatuma.put(j,AvailableEnum.FREE);
+			listaDatuma.put(j,ReservationStatus.FREE);
 			before = now.before(year);
 			int day = i.getDate();
 			int m = i.getMonth();
@@ -292,7 +294,11 @@ public class ApartmentService {
 //		apartmentMap.put(str,apartment);
 //		apDAO.dodajuFile(apartmentMap, contextPath);
 		Collection<Apartment> apartments = apDAO.getApartments().values();
-		apDAO.dodaj(apartment, contextPath);
+		HashMap<String,Apartment> apartmentsMap = apDAO.getApartments();
+		String str = String.valueOf(apartment.getId());
+		apartmentsMap.put(str,apartment);
+		apDAO.dodajuFile(apartmentsMap, contextPath);
+//		apDAO.dodaj(apartment, contextPath);
 		return Response.status(200).entity(apartments).build();
 	}
 	
@@ -363,6 +369,48 @@ public class ApartmentService {
 		return Response.status(200).entity(apartments).build();
 	}
 	
+	@GET
+	@Path("days/{availableFrom}/{availableTo}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getDays(@PathParam("availableFrom") String availableFrom, @PathParam("availableTo") String availableTo, @Context HttpServletRequest request) throws ParseException {
+//		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
+//		Date availableFromDate = sdf.parse(availableFrom);
+//		Date availableToDate = sdf.parse(availableTo);
+		int returnDays = 11;
+		char availableToDay2 = availableTo.charAt(8);
+		char availableToDay1 = availableTo.charAt(9);
+		char availableFromDay2 = availableFrom.charAt(8);
+		char availableFromDay1 = availableFrom.charAt(9);
+		
+		char availableToMonth2 = availableTo.charAt(5);
+		char availableToMonth1 = availableTo.charAt(6);
+		char availableFromMonth2 = availableFrom.charAt(5);
+		char availableFromMonth1 = availableFrom.charAt(6);
+		
+		Integer availableToDay1Int = Integer.valueOf(availableToDay1);
+		Integer availableToDay2Int = Integer.valueOf(availableToDay2);
+		Integer availableToMonth1Int = Integer.valueOf(availableToMonth1);
+		Integer availableToMonth2Int = Integer.valueOf(availableToMonth2);
+		
+		Integer availableFromDay1Int = Integer.valueOf(availableFromDay1);
+		Integer availableFromDay2Int = Integer.valueOf(availableFromDay2);
+		Integer availableFromMonth1Int = Integer.valueOf(availableFromMonth1) ;
+		Integer availableFromMonth2Int = Integer.valueOf(availableFromMonth2);
+		
+		Integer razlikaUDeseticama = 0;
+		Integer razlikaUJedinicama = 0;
+		Integer razlika;
+		
+		if((availableToMonth2Int == availableFromMonth2Int) && (availableToMonth1Int == availableFromMonth1Int)) {
+			razlikaUDeseticama = availableToDay2Int - availableFromDay2Int;
+			razlikaUJedinicama = availableToDay1Int - availableFromDay1Int;
+		}
+		razlika = razlikaUDeseticama*10 + razlikaUJedinicama;
+		returnDays = razlika;
+		return Response.status(200).entity(returnDays).build();
+	}
+	
 //	@PUT
 //	@Path("/modify/{id}")
 //	@Consumes(MediaType.APPLICATION_JSON)
@@ -396,16 +444,16 @@ public class ApartmentService {
 //		return Response.status(200).build();
 //		
 //	}
+	
+	
 //	@PUT
 //	@Path("addComment/{guest}/{apartment}")
 //	@Consumes(MediaType.APPLICATION_JSON)
 //	public Response addCommentToApartment(ApartmentComment comment, @Context HttpServletRequest request,
-//			@PathParam("guest") String username, @PathParam("apartment") Long id) {
+//			@PathParam("guest") String username, @PathParam("apartment") Apartment apartment) {
 //		UserDAO userDAO = (UserDAO) this.ctx.getAttribute("userDAO");
-//		Guest guest = (Guest) userDAO.searchUsers(username);
 //		
 //		ApartmentDAO apDAO = (ApartmentDAO) this.ctx.getAttribute("apartmentDAO");
-//		Apartment apartment = apDAO.find(id);
 //		
 //		comment.setGuest(guest);
 //		comment.setApartment(apartment);
@@ -422,6 +470,98 @@ public class ApartmentService {
 //		}
 //		
 //		return Response.status(200).build();	
+//	}
+	
+//	@PUT
+//	@Path("addComment/{apartment}")
+//	@Consumes(MediaType.APPLICATION_JSON)
+//	public Response addCommentToApartment(ApartmentComment comment, Apartment apartment, @Context HttpServletRequest request) {
+//		UserDAO userDAO = (UserDAO) this.ctx.getAttribute("userDAO");
+//		
+//		ApartmentDAO apDAO = (ApartmentDAO) this.ctx.getAttribute("apartmentDAO");
+//		
+//		comment.setApartment(apartment);
+//		apartment.getComments().add(comment);
+//		
+//		apDAO.change(apartment);
+//		
+//		Collection<ApartmentComment> comments = apartment.getComments();
+//		
+////		try {
+////			apDAO.saveApartments();
+////		} catch (Exception e) {
+////			// TODO Auto-generated catch block
+////			e.printStackTrace();
+////			return Response.status(500).build();
+////		}
+//		
+//		return Response.status(200).entity(comments).build();	
+//	}
+	
+	
+	@POST
+	@Path("addComment/{text}/{grade}/{username}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response addCommentToApartment(Apartment apartment, @PathParam("text") String text, @PathParam("grade") Integer grade, @PathParam("username") String username, @Context HttpServletRequest request) {
+		UserDAO userDAO = (UserDAO) this.ctx.getAttribute("userDAO");
+		
+		ApartmentDAO apDAO = (ApartmentDAO) this.ctx.getAttribute("apartmentDAO");
+//		ApartmentComment comment = new ApartmentComment(username,apartment,text,grade,true);
+		ApartmentComment comment = new ApartmentComment(username,text,grade,true);
+		apartment.getComments().add(comment);
+		apDAO.change(apartment);
+		Collection<ApartmentComment> comments = apartment.getComments();
+		
+//		try {
+//			apDAO.saveApartments();
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//			return Response.status(500).build();
+//		}
+		
+		return Response.status(200).entity(comments).build();	
+	}
+	
+	
+	@POST
+	@Path("addComment/{text}/{grade}/{username}/{apartmentId}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response addCommentToApartment(@PathParam("text") String text, @PathParam("grade") Integer grade, @PathParam("username") String username, @PathParam("apartmentId") UUID apartmentId, @Context HttpServletRequest request) {
+		UserDAO userDAO = (UserDAO) this.ctx.getAttribute("userDAO");
+		
+		ApartmentDAO apDAO = (ApartmentDAO) this.ctx.getAttribute("apartmentDAO");
+		ApartmentComment comment = new ApartmentComment(username,text,grade,true);
+		Apartment apartment = new Apartment();
+		for(Apartment iter : apDAO.getAllActive()) {
+			if(iter.getId().equals(apartmentId)) {
+				apartment = iter;
+			}
+		}
+		apartment.getComments().add(comment);
+		apDAO.change(apartment);
+		Collection<ApartmentComment> comments = apartment.getComments();
+		
+//		try {
+//			apDAO.saveApartments();
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//			return Response.status(500).build();
+//		}
+		
+		return Response.status(200).entity(comments).build();	
+	}
+	
+	
+//	@POST
+//	@Path("commentsHost/{username}")
+//	@Consumes(MediaType.APPLICATION_JSON)
+//	@Produces(MediaType.APPLICATION_JSON)
+//	public Response getCommentsHost(@PathParam("username") String username, @Context HttpServletRequest request) {
+//		ApartmentDAO apartmentDAO = (ApartmentDAO) this.ctx.getAttribute("apartmentDAO");
+//		Collection<ApartmentComment> comments = apartmentDAO.allCommentsHost(username);
+//		return Response.status(200).entity(comments).build();
 //	}
 
 }

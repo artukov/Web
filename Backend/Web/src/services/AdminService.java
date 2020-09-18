@@ -4,6 +4,7 @@ package services;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -154,6 +155,31 @@ public class AdminService {
 		
 		Collection<User> users = userDao.getUsers().values();
 		return users;
+	}
+	
+	
+	@POST
+	@Path("/addUser")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response addUser(User user, @Context HttpServletRequest request) { //vidi dal user ili response pa sta onda
+		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
+		boolean loggedUser = userDao.find(user.getUsername());
+		User userLog = userDao.find(user.getUsername(), user.getPassword());
+		System.out.println(loggedUser+"user klasa");
+		if (loggedUser== true) {
+			return Response.status(400).entity("Korisnicko ime vec postoji!").build();
+//			System.out.println("Idemoo");
+//			return null;
+		}
+		
+		String contextPath = ctx.getRealPath("");
+		HashMap<String,User> users = userDao.getUsers();
+		users.put(user.getUsername(),user);
+		userDao.dodajuFile(users, contextPath);
+		System.out.println(userDao);
+		
+		return Response.status(200).entity(user).build();
 	}
 	
 	

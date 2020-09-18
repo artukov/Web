@@ -5,5 +5,6 @@ public enum ReservationStatus {
 	DENIED,
 	WITHDRAWAL,
 	ACCEPTED,
-	FINISHED
+	FINISHED,
+	FREE
 }

@@ -76,6 +76,8 @@ export default {
           this.$store.state.user = response;
           this.$store.state.role = this.$store.state.user.data.role;
           this.$router.push("/home");
+          
+          
         }
         // 
       })
@@ -88,6 +90,13 @@ export default {
   },
 
   mounted() {
+    window.onpopstate = function(event) {
+        // alert("locationnnn: " + document.location + ", state: " + JSON.stringify(event.state));
+        window.history.forward();
+        console.log(event);
+      };
+
+
       axios.get("/Web/rest/users")
       .then(users => {
         this.users = users.data;
@@ -95,6 +104,7 @@ export default {
       .catch(error => {
         console.log(error);
       });
+      
   }
 };
 </script>

@@ -6,17 +6,17 @@ import java.util.UUID;
 public class Reservation {
 	
 	private Apartment apartment;
-	private Date startDate;
+	private String startDate;
 	private Integer numberNights;
 	private Double fullPrice;
 	private String reservationMessage;
-	private Guest guest;
+	private String guest;
 	private ReservationStatus statusRes;
 	private UUID id;
 	
 	
-	public Reservation(Apartment apartment, Date startDate, Integer numberNights, Double fullPrice,
-			String reservationMessage, Guest guest, ReservationStatus statusRes) {
+	public Reservation(Apartment apartment, String startDate, Integer numberNights, Double fullPrice,
+			String reservationMessage, String guest, ReservationStatus statusRes) {
 		super();
 		this.apartment = apartment;
 		this.startDate = startDate;
@@ -31,6 +31,11 @@ public class Reservation {
 	public Reservation(Apartment apartment) {
 		super();
 		this.apartment = apartment;
+		this.id = UUID.randomUUID();
+	}
+	
+	public Reservation(Integer numberNights) {
+		this.numberNights = numberNights;
 		this.id = UUID.randomUUID();
 	}
 	
@@ -51,10 +56,10 @@ public class Reservation {
 	public void setApartment(Apartment apartment) {
 		this.apartment = apartment;
 	}
-	public Date getStartDate() {
+	public String getStartDate() {
 		return startDate;
 	}
-	public void setStartDate(Date startDate) {
+	public void setStartDate(String startDate) {
 		this.startDate = startDate;
 	}
 	public Integer getNumberNights() {
@@ -75,10 +80,10 @@ public class Reservation {
 	public void setReservationMessage(String reservationMessage) {
 		this.reservationMessage = reservationMessage;
 	}
-	public Guest getGuest() {
+	public String getGuest() {
 		return guest;
 	}
-	public void setGuest(Guest guest) {
+	public void setGuest(String guest) {
 		this.guest = guest;
 	}
 	public ReservationStatus getStatusRes() {

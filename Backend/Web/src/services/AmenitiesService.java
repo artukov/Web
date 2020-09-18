@@ -97,14 +97,17 @@ public class AmenitiesService {
 	@Path("/new")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response createNewAmenity(Amenities amenities, @Context HttpServletRequest request) {
-		User admin = (User) request.getSession().getAttribute("user");
+//		User admin = (User) request.getSession().getAttribute("user");
 //		if(admin.getRole() != UserRole.ADMIN) {
 //			return Response.status(403).entity("Samo admin ima dozvolu").build();
 //		}
 		
 		AmenitiesDAO amenitiesDAO = (AmenitiesDAO) this.ctx.getAttribute("amenitiesDAO");
 		String contextPath = ctx.getRealPath("");
-		amenitiesDAO.dodaj(amenities,contextPath);
+//		amenitiesDAO.dodaj(amenities,contextPath);
+		HashMap<String,Amenities> amenitiess = amenitiesDAO.getAmenitiess();
+		amenitiess.put(amenities.getName(),amenities);
+		amenitiesDAO.dodajuFile(amenitiess, contextPath);
 		
 //		HashMap<String,Amenities> amenityMap = new HashMap<String,Amenities>();
 //		amenityMap.put(amenities.getName(),amenities);

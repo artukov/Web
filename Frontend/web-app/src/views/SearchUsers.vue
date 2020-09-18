@@ -66,9 +66,8 @@
         ></b-form-select>
       </b-form-group>
 
-<div>
+    <div>
       <b-button type="submit" variant="primary" class="btn-block z-depth-2">Search users</b-button>
-      <b-button type="button" variant="primary" class="btn-block z-depth-2" @click="showAllUsers">Show all users</b-button>
     </div>
     </b-form>
   </div>
@@ -87,7 +86,7 @@ export default {
         role: null,
       },
       genders: ["MALE", "FEMALE"],
-      roles: ["GUEST", "HOST"],
+      roles: ["GUEST", "HOST","ADMIN"],
       error: false,
       errorMessage: "",
       confirmPass: "",
@@ -112,8 +111,9 @@ export default {
           error;
         })
     },
+  },
 
-    showAllUsers() {
+  mounted() {
       axios.get("/Web/rest/users")
         .then(users => {
           this.users = users.data;
@@ -121,7 +121,6 @@ export default {
         .catch(error => {
           console.log(error);
         });
-    }
   }
 };
 </script>

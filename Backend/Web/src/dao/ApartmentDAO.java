@@ -256,9 +256,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import beans.Amenities;
 import beans.Apartment;
+import beans.ApartmentComment;
 import beans.AvailableDate;
 import beans.AvailableEnum;
 import beans.DayMonthYear;
+import beans.Reservation;
+import beans.ReservationStatus;
 
 public class ApartmentDAO {
 
@@ -457,6 +460,7 @@ public class ApartmentDAO {
 		Collection<Apartment> allApartments = getAllActive();
 		Collection<Apartment> apartments = new ArrayList<Apartment>();
 		for(Apartment iter : allApartments) {
+			boolean cont = false;
 			if(!(apartment.getNumberRooms() == null)) {
 				if(!apartment.getNumberRooms().equals(iter.getNumberRooms())) {
 					continue;
@@ -478,34 +482,50 @@ public class ApartmentDAO {
 					
 //				}
 //				List<List<AvailableDate>> availableDates;
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 				Date now = new Date();
 				Date noww = new Date();
 				noww.setDate(now.getDate()+1);
 				Date availableFromDate = sdf.parse(availableFrom);
 				Date availableToDate = sdf.parse(availableTo);
-				HashMap<Date,AvailableEnum> availableDates;
-				for(Apartment ap : allApartments) {
-					availableDates = ap.getAppartmentDates();
+				HashMap<Date,ReservationStatus> availableDates;
+//				for(Apartment ap : allApartments) {
+					availableDates = iter.getAppartmentDates();
 					boolean before = true;
 					Date afd;
 					for(afd = availableFromDate; before; afd.setDate(afd.getDate()+1)) { //TODO mozes promeniti ove forove
 						Date j = (Date) afd.clone();
 						before = availableFromDate.before(availableToDate);
-						for(Map.Entry<Date, AvailableEnum> date : availableDates.entrySet()) {
+						for(Map.Entry<Date, ReservationStatus> date : availableDates.entrySet()) {
 							Date datedate = date.getKey();
-							if((datedate.getDay() == j.getDay()) && (datedate.getMonth() == j.getMonth()) && (datedate.getYear() == j.getYear())) {
-								if(date.getValue().equals(AvailableEnum.TAKEN)) {
-									continue;
+							int dateDan = datedate.getDate();
+							int dateMesec = datedate.getMonth();
+							int dateGod = datedate.getYear();
+							int jDan = j.getDate();
+							int jMesec = j.getMonth();
+							int jGod = j.getYear();
+							ReservationStatus ajmo = date.getValue();
+							ReservationStatus proba = ReservationStatus.ACCEPTED;
+//							if((datedate.getDay() == j.getDay()) && (datedate.getMonth() == j.getMonth()) && (datedate.getYear() == j.getYear())) {
+							if((datedate.getDate() == j.getDate()) && (datedate.getMonth() == j.getMonth())) {
+//								 && (datedate.getMonth() == j.getMonth())
+							if(date.getValue() == proba) {
+									int dateDand = datedate.getDate();
+									int dateMesecd = datedate.getMonth();
+									int dateGodd = datedate.getYear();
+									int jDand = j.getDate();
+									int jMesecd = j.getMonth();
+									int jGodd = j.getYear();
+									cont = true;
+									break;
 								}
 							}
-							
 						}
-//						if(availableDates.get(j).equals(AvailableEnum.TAKEN)) {
-//							continue;
-//						}
 					}
-				}
+//				}
+			}
+			if(cont) {
+				continue;
 			}
 			
 			if(!(apartment.getPriceNight() == null)) {
@@ -547,8 +567,9 @@ public class ApartmentDAO {
 	}
 	
 	public void change(Apartment apartment) {
-		if(apartments.containsKey(apartment.getId())) {
-			String str = String.valueOf(apartment.getId());
+		String str = String.valueOf(apartment.getId());
+		if(apartments.containsKey(str)) {
+//			String str = String.valueOf(apartment.getId());
 			apartments.put(str,apartment);
 		}
 	}
@@ -575,6 +596,20 @@ public class ApartmentDAO {
 		
 		
 	}
+	
+	
+	public Collection<ApartmentComment> allCommentsHost(String user) {
+		List<ApartmentComment> allCommentsHost = new ArrayList<ApartmentComment>();
+		Collection<Apartment> apartments = this.apartments.values();
+		for(Apartment apartment : apartments) {
+			if(apartment.getHost().equals(user)) {
+				for(ApartmentComment comment : apartment.getComments()) {
+					allCommentsHost.add(comment);
+				}
+			}
+		}
+		return allCommentsHost;
+	}
 
 //	public void save() {
 //		ObjectMapper objectMapper = new ObjectMapper();
@@ -585,9 +620,90 @@ public class ApartmentDAO {
 //			e.printStackTrace();
 //		}
 //}
+	
+//	public HashMap<Date,ReservationStatus> reserveApartment(Apartment apartment, Reservation reservation) throws ParseException {
+//		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
+//		Date availableFromDate = sdf.parse(reservation.getStartDate());
+//		Date availableToDate = sdf.parse(reservation.getStartDate()+reservation.getNumberNights());
+//		HashMap<Date,ReservationStatus> availableDates;
+//		availableDates = apartment.getAppartmentDates();
+//		boolean before = true;
+//		Date afd;
+//		for(afd = availableFromDate; before; afd.setDate(afd.getDate()+1)) { //TODO mozes promeniti ove forove
+//			Date j = (Date) afd.clone();
+//			before = availableFromDate.before(availableToDate);
+//			for(Map.Entry<Date, ReservationStatus> date : availableDates.entrySet()) {
+//				Date datedate = date.getKey();
+//				int dateDan = datedate.getDate();
+//				int dateMesec = datedate.getMonth();
+//				int dateGod = datedate.getYear();
+//				int jDan = j.getDate();
+//				int jMesec = j.getMonth();
+//				int jGod = j.getYear();
+//				ReservationStatus ajmo = date.getValue();
+//				ReservationStatus proba = ReservationStatus.ACCEPTED;
+////					if((datedate.getDay() == j.getDay()) && (datedate.getMonth() == j.getMonth()) && (datedate.getYear() == j.getYear())) {
+//				if((datedate.getDate() == j.getDate()) && (datedate.getMonth() == j.getMonth())) {
+////						 && (datedate.getMonth() == j.getMonth())
+//				if(date.getValue() != proba) {
+//						int dateDand = datedate.getDate();
+//						int dateMesecd = datedate.getMonth();
+//						int dateGodd = datedate.getYear();
+//						int jDand = j.getDate();
+//						int jMesecd = j.getMonth();
+//						int jGodd = j.getYear();
+//						date.setValue(ReservationStatus.ACCEPTED);
+//						availableDates.put(j, ReservationStatus.ACCEPTED);
+//					}
+//				}
+//			}
+//		}
+//		return availableDates;
+//	}
+//}
 
+	
+	@SuppressWarnings("deprecation")
+	public HashMap<Date,ReservationStatus> reserveApartment(Apartment apartment, Reservation reservation) throws ParseException {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Date availableFromDateC = sdf.parse(reservation.getStartDate());
+		Date availableFromDate = (Date) availableFromDateC.clone();
+		Date availableToDate = availableFromDateC;
+		availableToDate.setDate(availableToDate.getDate()+reservation.getNumberNights());
+		HashMap<Date,ReservationStatus> availableDates;
+		availableDates = apartment.getAppartmentDates();
+		boolean before = true;
+		Date afd;
+		HashMap<Date,ReservationStatus> forDates = new HashMap<Date,ReservationStatus>();
+		for(afd = availableFromDate; before; afd.setDate(afd.getDate()+1)) { //TODO mozes promeniti ove forove
+			Date j = (Date) afd.clone();
+			before = availableFromDate.before(availableToDate);
+			for(Map.Entry<Date, ReservationStatus> date : availableDates.entrySet()) {
+				Date datedate = date.getKey();
+				int dateDan = datedate.getDate();
+				int dateMesec = datedate.getMonth();
+				int dateGod = datedate.getYear();
+				int jDan = j.getDate();
+				int jMesec = j.getMonth();
+				int jGod = j.getYear();
+				ReservationStatus proba = ReservationStatus.ACCEPTED;
+//					if((datedate.getDay() == j.getDay()) && (datedate.getMonth() == j.getMonth()) && (datedate.getYear() == j.getYear())) {
+				if((datedate.getDate() == j.getDate()) && (datedate.getMonth() == j.getMonth())) {
+					if(date.getValue() != proba) {
+						int dateDand = datedate.getDate();
+						int dateMesecd = datedate.getMonth();
+						int dateGodd = datedate.getYear();
+						int jDand = j.getDate();
+						int jMesecd = j.getMonth();
+						int jGodd = j.getYear();
+						availableDates.put(datedate, ReservationStatus.ACCEPTED);
+					}
+				}
+			}
+		}
+		return availableDates;
+	}
 }
-
 
 
 
