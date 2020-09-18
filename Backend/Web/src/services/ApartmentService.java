@@ -458,7 +458,8 @@ public class ApartmentService {
 		UserDAO userDAO = (UserDAO) this.ctx.getAttribute("userDAO");
 		
 		ApartmentDAO apDAO = (ApartmentDAO) this.ctx.getAttribute("apartmentDAO");
-		ApartmentComment comment = new ApartmentComment(username,apartment,text,grade,true);
+//		ApartmentComment comment = new ApartmentComment(username,apartment,text,grade,true);
+		ApartmentComment comment = new ApartmentComment(username,text,grade,true);
 		apartment.getComments().add(comment);
 		apDAO.change(apartment);
 		Collection<ApartmentComment> comments = apartment.getComments();

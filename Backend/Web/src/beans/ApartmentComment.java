@@ -3,7 +3,6 @@ package beans;
 public class ApartmentComment {
 
 	private String guest;
-	private Apartment apartment;
 	private String text;
 	private Integer grade;
 	private boolean visible;
@@ -19,19 +18,35 @@ public class ApartmentComment {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public ApartmentComment(String guest, Apartment apartment, String text, Integer grade, boolean visible) {
+//	public ApartmentComment(String guest, Apartment apartment, String text, Integer grade, boolean visible) {
+//		super();
+//		this.guest = guest;
+//		this.apartment = apartment;
+//		this.text = text;
+//		this.grade = grade;
+//		this.visible = visible;
+//	}
+//	
+//	public ApartmentComment(String guest, Apartment apartment, String text, Integer grade) {
+//		super();
+//		this.guest = guest;
+//		this.apartment = apartment;
+//		this.text = text;
+//		this.grade = grade;
+//	}
+	
+	
+	public ApartmentComment(String guest, String text, Integer grade, boolean visible) {
 		super();
 		this.guest = guest;
-		this.apartment = apartment;
 		this.text = text;
 		this.grade = grade;
 		this.visible = visible;
 	}
-	
-	public ApartmentComment(String guest, Apartment apartment, String text, Integer grade) {
+
+	public ApartmentComment(String guest, String text, Integer grade) {
 		super();
 		this.guest = guest;
-		this.apartment = apartment;
 		this.text = text;
 		this.grade = grade;
 	}
@@ -49,12 +64,12 @@ public class ApartmentComment {
 	public void setGuest(Guest String) {
 		this.guest = guest;
 	}
-	public Apartment getApartment() {
-		return apartment;
-	}
-	public void setApartment(Apartment apartment) {
-		this.apartment = apartment;
-	}
+//	public Apartment getApartment() {
+//		return apartment;
+//	}
+//	public void setApartment(Apartment apartment) {
+//		this.apartment = apartment;
+//	}
 	public String getText() {
 		return text;
 	}
