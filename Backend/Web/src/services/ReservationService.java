@@ -31,6 +31,7 @@ import beans.Location;
 import beans.Reservation;
 import beans.ReservationStatus;
 import beans.User;
+import beans.UserRole;
 import dao.AddressDAO;
 import dao.AmenitiesDAO;
 import dao.ApartmentDAO;
@@ -106,17 +107,31 @@ public class ReservationService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response createReservation(Apartment apartment, @PathParam("startDate") String startDate, @PathParam("numberNights") Integer numberNights, @PathParam("reservationMessage") String reservationMessage, @PathParam("guest") String guest, @Context HttpServletRequest request) {
-		User admin = (User) request.getSession().getAttribute("user");
+//		User admin = (User) request.getSession().getAttribute("user");
 //		if(admin.getRole() != UserRole.ADMIN) {
 //			return Response.status(403).entity("Samo admin ima dozvolu").build();
 //		}
+		UserDAO userDAO = (UserDAO) this.ctx.getAttribute("userDAO");
+		Collection<User> users = userDAO.getUsers().values();
+		User user = new User();
+		for(User iter : users) {
+			if(guest.equals(iter.getUsername())) {
+				user = iter;
+			}
+		}
+		if(user.getRole() != UserRole.GUEST) {
+			return Response.status(403).entity("Samo gost ima dozvolu").build();
+		}
 		
 		ReservationDAO reservationDAO = (ReservationDAO) this.ctx.getAttribute("reservationDAO");
 		String contextPath = ctx.getRealPath("");
 		Reservation reservation = new Reservation(apartment,startDate,numberNights,(double)(apartment.getPriceNight()*numberNights),reservationMessage,guest, ReservationStatus.CREATED);
-		reservationDAO.dodaj(reservation,contextPath);
+//		reservationDAO.dodaj(reservation,contextPath);
 		Collection<Reservation> reservations = reservationDAO.getReservations().values();
-		
+		HashMap<String,Reservation> reservationsMap = reservationDAO.getReservations();
+		String str = String.valueOf(reservation.getId());
+		reservationsMap.put(str,reservation);
+		reservationDAO.dodajuFile(reservationsMap, contextPath);
 //		HashMap<String,Amenities> amenityMap = new HashMap<String,Amenities>();
 //		amenityMap.put(amenities.getName(),amenities);
 //		amenitiesDAO.dodajuFile(amenityMap,contextPath);

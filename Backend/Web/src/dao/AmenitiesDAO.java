@@ -214,11 +214,11 @@ public class AmenitiesDAO {
 //	}
 //
 //	
-//	public void remove(Amenities amenities) {
-//		if (amenitiess.containsKey(amenities.getId())) {
-//			amenitiess.remove(amenities.getId(), amenities);
-//		}
-//	}
+	public void remove(String amenities) {
+		if (amenitiess.containsKey(amenities)) {
+			amenitiess.remove(amenities, amenities);
+		}
+	}
 //	
 	public void change(String oldName, String newName) {
 		if(amenitiess.containsKey(oldName)) {

@@ -215,4 +215,15 @@ public class AmenitiesService {
 //		
 //		return Response.status(200).build();
 //	}
+	
+	
+	@DELETE
+	@Path("/delete/{id}")
+	public Response deleteAmenity(@PathParam("id") String id, @Context HttpServletRequest request) {
+		AmenitiesDAO dao = (AmenitiesDAO) this.ctx.getAttribute("amenitiesDAO");
+		dao.remove(id);
+		Collection<Amenities> amenitiess = dao.getAmenitiess().values();
+		return Response.status(200).entity(amenitiess).build();
+	}
+	
 }
