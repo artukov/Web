@@ -57,6 +57,14 @@
                                     @click="showAmenity(amenity.name)"
                                     >Change amenity</button>
                                 </div>
+
+                                   <div class="text-center mb-4">
+                                    <button
+                                    type="button"
+                                    class="btn btn-danger btn-block z-depth-2"
+                                    @click="deleteAmenity(amenity.name)"
+                                    >Delete amenity</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -170,6 +178,17 @@ export default {
                 if(response.status == 200) {
                     console.log("ide gaaaaaaas");
                 }
+            })
+            .catch(error => {
+                console.log(error);
+            })
+        },
+
+        deleteAmenity(amenity) {
+            axios.delete("Web/rest/amenities/delete/" + amenity)
+            .then(response => {
+                this.amenities = response.data;
+                this.showAmenities = true;
             })
             .catch(error => {
                 console.log(error);
