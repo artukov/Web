@@ -476,6 +476,36 @@ public class ApartmentService {
 	}
 	
 	
+	@POST
+	@Path("addComment/{text}/{grade}/{username}/{apartmentId}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response addCommentToApartment(@PathParam("text") String text, @PathParam("grade") Integer grade, @PathParam("username") String username, @PathParam("apartmentId") UUID apartmentId, @Context HttpServletRequest request) {
+		UserDAO userDAO = (UserDAO) this.ctx.getAttribute("userDAO");
+		
+		ApartmentDAO apDAO = (ApartmentDAO) this.ctx.getAttribute("apartmentDAO");
+		ApartmentComment comment = new ApartmentComment(username,text,grade,true);
+		Apartment apartment = new Apartment();
+		for(Apartment iter : apDAO.getAllActive()) {
+			if(iter.getId().equals(apartmentId)) {
+				apartment = iter;
+			}
+		}
+		apartment.getComments().add(comment);
+		apDAO.change(apartment);
+		Collection<ApartmentComment> comments = apartment.getComments();
+		
+//		try {
+//			apDAO.saveApartments();
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//			return Response.status(500).build();
+//		}
+		
+		return Response.status(200).entity(comments).build();	
+	}
+	
+	
 //	@POST
 //	@Path("commentsHost/{username}")
 //	@Consumes(MediaType.APPLICATION_JSON)

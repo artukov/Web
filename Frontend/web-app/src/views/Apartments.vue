@@ -213,15 +213,15 @@
 
 
 
-<div class="header pt-3 grey lighten-2">
-            <div class="row d-flex justify-content-start">
-                <h3 class="deep-grey-text mt-3 mb-4 pb-1 mx-5"
-                style="font-size: 2rem;
-                font-weight: 300;
-                line-height: 1.2;
-                margin-top: -12%;">Reservation</h3>
-            </div>
-        </div>
+                            <div class="header pt-3 grey lighten-2">
+                              <div class="row d-flex justify-content-start">
+                                  <h3 class="deep-grey-text mt-3 mb-4 pb-1 mx-5"
+                                  style="font-size: 2rem;
+                                  font-weight: 300;
+                                  line-height: 1.2;
+                                  margin-top: -12%;">Reservation</h3>
+                              </div>
+                            </div>
 
 
                         <div class="md-form">
@@ -499,7 +499,7 @@ export default {
         this.showAll = false;
         this.showComment = false;
         this.showReservation = false;
-        axios.post("Web/rest/apartment/addComment/" + this.formComment.text + "/" + this.formComment.grade + "/" + this.$store.state.user.data.username, this.activeApartment)
+        axios.post("Web/rest/apartment/addComment/" + this.formComment.text + "/" + this.formComment.grade + "/" + this.$store.state.user.data.username + "/" + this.activeApartment.id)
         // , this.formComment, this.activeApartment
         .then(response => {
           this.comments = response.data;

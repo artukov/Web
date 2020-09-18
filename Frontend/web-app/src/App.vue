@@ -10,7 +10,7 @@
       <b-navbar>
         <b-navbar-nav>
           <router-link to="/home">Home</router-link>|
-          <router-link to="/about">About</router-link>|
+          <!-- <router-link to="/about">About</router-link>| -->
           <router-link to="/register" v-if="this.$store.state.user == null">Register</router-link>|
           <router-link to="/" v-if="this.$store.state.user == null">Login</router-link>|
           <router-link to="/profile" v-if="this.$store.state.user != null">Profile</router-link>|
