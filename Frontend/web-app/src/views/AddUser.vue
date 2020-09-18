@@ -30,16 +30,6 @@
         ></b-form-input>
       </b-form-group>
 
-      <b-form-group id="input-group-1" label="Confirm password:" label-for="input-1">
-        <b-form-input
-          id="input-1"
-          v-model="confirmPass"
-          type="password"
-          required
-          placeholder="Enter password"
-        ></b-form-input>
-      </b-form-group>
-
       <b-form-group id="input-group-3" label="Name:" label-for="input-2">
         <b-form-input
           id="input-2"
@@ -67,7 +57,7 @@
         ></b-form-select>
       </b-form-group>
 
-      <b-button type="submit" variant="primary">Register</b-button>
+      <b-button type="submit" variant="primary">Add user</b-button>
     </b-form>
   </div>
 </template>
@@ -83,7 +73,7 @@ export default {
         name: "",
         lastName: "",
         gender: null,
-        role: "GUEST",
+        role: "ADMIN",
       },
       genders: ["MALE", "FEMALE"],
       roles: ["GUEST", "HOST"],
@@ -97,33 +87,16 @@ export default {
   },
   methods: {
     onSubmit() {
-    //   var user = {
-    //     username: this.form.name,
-    //     password: this.form.password,
-    //     gender: this.form.gender,
-    //     userRole: this.form.role,
-    //     name: this.form.name,
-    //     lastname: this.form.lastname,
-    //   };
-      if(this.form.password != this.confirmPass) {
-        this.errormessage = "Passwords do not match!";
-          this.error = true;
-        return;
-      }
-      axios.post("/Web/rest/register", this.form)
+      axios.post("/Web/rest/addUser", this.form)
       .then(response => {
         this.form = response.data;
-        this.error = false;
-        this.$store.state.user = response;
-        this.$store.state.role = this.$store.state.user.data.role;
         this.success = true;
-        this.successmessages = "User successfully registered.";
+        this.successmessages = "User added successfully.";
         this.error = false;
-        this.$router.push("/home");
       })
       .catch(error => {
           console.log(error);
-          this.errormessage = "Error occurred while registering.";
+          this.errormessage = "Error occurred while adding user.";
           this.error = true;
         });
     },

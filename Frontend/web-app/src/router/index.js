@@ -10,6 +10,7 @@ import MyApartments from "../views/MyApartments.vue";
 import Apartments from "../views/Apartments.vue"
 import Amenities from "../views/Amenities.vue";
 import Reservations from "../views/Reservations.vue";
+import AddUser from "../views/AddUser.vue";
 
 Vue.use(VueRouter);
 
@@ -72,6 +73,11 @@ const routes = [
     path: '/reservations',
     name: 'Reservations',
     component: Reservations
+  },
+  {
+    path: '/addUser',
+    name: 'AddUser',
+    component: AddUser
   },
 ];
 

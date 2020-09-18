@@ -45,9 +45,9 @@
 
       <b-form-group id="input-group-5" label-for="input-5">
           <label for="Form-DateFrom">Pickup date</label>
-          <input type="date" id="Form-availableFrom" class="form-control" v-model="date.availableFrom" />
+          <input type="date" id="Form-availableFrom" class="form-control" min="2020-09-18" max="2021-09-18" v-model="date.availableFrom" required/>
           <label for="Form-DateTo">Leaving date</label>
-          <input type="date" id="Form-availableTo" class="form-control" v-model="date.availableTo" />
+          <input type="date" id="Form-availableTo" class="form-control" min="2020-09-18" max="2021-09-18" v-model="date.availableTo" required/>
       </b-form-group>
 
       <b-form-group id="input-group-3" label="Price per night:" label-for="input-2">
@@ -101,11 +101,21 @@
                 style="font-size: 2rem;
                 font-weight: 300;
                 line-height: 1.2;
-                margin-top: -12%;">Active apartments</h3>
+                margin-top: -12%;">Apartments</h3>
             </div>
         </div>
 
         <div class="form-group" v-for="activeApartment in apartments" :key="activeApartment.id">
+          
+          <div class="header pt-3 grey lighten-2">
+            <div class="row d-flex justify-content-start">
+                <h3 class="deep-grey-text mt-3 mb-4 pb-1 mx-5"
+                style="font-size: 25px;
+                font-weight: 200;
+                line-height: 1.2;">Apartment</h3>
+            </div>
+          </div>
+
             <div class="card-body mx-4 mt-4">
                 <div class="row">
                     <div class="col">
@@ -160,6 +170,37 @@
                     </div>
                 </div>
             </div>
+
+            <div>
+            <div class="form-group" v-for="comment in activeApartment.comments" :key="comment.text">
+                <div class="header pt-3 grey lighten-2">
+                  <div class="row d-flex justify-content-start">
+                      <h3 class="deep-grey-text mt-3 mb-4 pb-1 mx-5"
+                      style="font-size: 25px;
+                      font-weight: 200;
+                      line-height: 1.2;">Comment</h3>
+                  </div>
+                </div>
+                <div class="card-body mx-4 mt-4">
+                    <div class="row">
+                        <div class="col">
+                            <div class="md-form">
+                                <label for="Form-type">Guest</label>
+                                <label id="Form-type" class="form-control">{{comment.guest}}</label>
+
+                                <label for="Form-rooms">Grade</label>
+                                <label id="Form-rooms" class="form-control">{{comment.grade}}</label>
+
+                                <label for="Form-guests">Comment</label>
+                                <label id="Form-guests" class="form-control">{{comment.text}}</label>
+                                <br/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </div>
+
         </div>   
     </div>
     </div>
@@ -228,10 +269,10 @@
                             <label for="Form-rooms">Reservation date</label>
                             <!-- <label id="Form-rooms" class="form-control" v-if="date.availableFrom != 'null'">{{date.availableFrom}}</label>
                             <label id="Form-rooms" class="form-control" v-if="date.availableFrom == 'null'"></label> -->
-                            <input type="date" id="Form-availableFrom" class="form-control" v-model="formReservation.startDate" required/>
+                            <input type="date" id="Form-availableFrom" class="form-control" v-model="formReservation.startDate" readonly/>
 
                             <label for="Form-guests">Number of days</label>
-                            <input id="Form-guests" type="number" class="form-control" v-model="formReservation.numberNights" required>
+                            <input id="Form-guests" type="number" class="form-control" v-model="formReservation.numberNights" readonly>
 
                             <label for="Form-surname">Message for host</label>
                             <input id="Form-surname" class="form-control" v-model="formReservation.reservationMessage" required>
@@ -431,7 +472,7 @@ export default {
             error: false,
             errormessage: "",
             success: false,
-            successmessages: "",            
+            successmessages: ""  
         }
     },
 
@@ -445,9 +486,20 @@ export default {
             console.log("2");
           }
         }
+        this.end = this.date.availableTo - this.date.availableFrom;
         axios.post("Web/rest/apartment/search/" + this.date.availableFrom + "/" + this.date.availableTo, this.form) 
           .then(response => {
             this.apartments = response.data;
+            if(response.status == 200) {
+              console.log("ide gaaaaaaaas");
+            }
+          })
+          .catch(error => {
+            console.log(error);
+          })
+          axios.get("Web/rest/apartment/days/" + this.date.availableFrom + "/" + this.date.availableTo) 
+          .then(response => {
+            this.formReservation.numberNights = response.data;
             if(response.status == 200) {
               console.log("ide gaaaaaaaas");
             }
@@ -526,7 +578,8 @@ export default {
         // .catch(error => {
         //     console.log(error);
         // })
-
+        this.dateee = new Date();
+        console.log(this.date);
 
         axios.get("/Web/rest/locations")
         .then(response => {

@@ -1,6 +1,7 @@
 package services;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -249,7 +250,7 @@ public class ApartmentService {
 //		Date j = new Date();
 		for(i = now; before; i.setDate(i.getDate()+1)) {
 			Date j = (Date) i.clone();	
-			listaDatuma.put(j,AvailableEnum.TAKEN);
+			listaDatuma.put(j,AvailableEnum.FREE);
 			before = now.before(year);
 			int day = i.getDate();
 			int m = i.getMonth();
@@ -361,6 +362,48 @@ public class ApartmentService {
 		String contextPath = ctx.getRealPath("");
 		Collection<Apartment> apartments = apartmentDAO.searchApartments(apartment, availableFrom, availableTo);
 		return Response.status(200).entity(apartments).build();
+	}
+	
+	@GET
+	@Path("days/{availableFrom}/{availableTo}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getDays(@PathParam("availableFrom") String availableFrom, @PathParam("availableTo") String availableTo, @Context HttpServletRequest request) throws ParseException {
+//		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
+//		Date availableFromDate = sdf.parse(availableFrom);
+//		Date availableToDate = sdf.parse(availableTo);
+		int returnDays = 11;
+		char availableToDay2 = availableTo.charAt(8);
+		char availableToDay1 = availableTo.charAt(9);
+		char availableFromDay2 = availableFrom.charAt(8);
+		char availableFromDay1 = availableFrom.charAt(9);
+		
+		char availableToMonth2 = availableTo.charAt(5);
+		char availableToMonth1 = availableTo.charAt(6);
+		char availableFromMonth2 = availableFrom.charAt(5);
+		char availableFromMonth1 = availableFrom.charAt(6);
+		
+		Integer availableToDay1Int = Integer.valueOf(availableToDay1);
+		Integer availableToDay2Int = Integer.valueOf(availableToDay2);
+		Integer availableToMonth1Int = Integer.valueOf(availableToMonth1);
+		Integer availableToMonth2Int = Integer.valueOf(availableToMonth2);
+		
+		Integer availableFromDay1Int = Integer.valueOf(availableFromDay1);
+		Integer availableFromDay2Int = Integer.valueOf(availableFromDay2);
+		Integer availableFromMonth1Int = Integer.valueOf(availableFromMonth1) ;
+		Integer availableFromMonth2Int = Integer.valueOf(availableFromMonth2);
+		
+		Integer razlikaUDeseticama = 0;
+		Integer razlikaUJedinicama = 0;
+		Integer razlika;
+		
+		if((availableToMonth2Int == availableFromMonth2Int) && (availableToMonth1Int == availableFromMonth1Int)) {
+			razlikaUDeseticama = availableToDay2Int - availableFromDay2Int;
+			razlikaUJedinicama = availableToDay1Int - availableFromDay1Int;
+		}
+		razlika = razlikaUDeseticama*10 + razlikaUJedinicama;
+		returnDays = razlika;
+		return Response.status(200).entity(returnDays).build();
 	}
 	
 //	@PUT

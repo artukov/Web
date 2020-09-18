@@ -20,7 +20,8 @@
           <router-link to="/apartments">Apartments</router-link>|
           <router-link to="/amenities">Amenities</router-link>|
           <router-link to="/reservations" v-if="this.$store.state.user != null">Reservations</router-link>|
-          <router-link to="/searchUsers">Users</router-link>|
+          <router-link to="/addUser">AddUser</router-link>|
+          <router-link to="/searchUsers">Users</router-link>|      
         </b-navbar-nav>
         <button id="dugme" @click="logout" v-if="this.$store.state.user != null"><b>Logout</b></button>
       </b-navbar>
