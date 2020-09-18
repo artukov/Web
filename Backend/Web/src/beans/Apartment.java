@@ -19,7 +19,7 @@ public class Apartment {
 	private Integer numberRooms;
 	private Integer guestNumber;
 	private Integer location;
-	private HashMap<Date,AvailableEnum> appartmentDates;
+	private HashMap<Date,ReservationStatus> appartmentDates;
 	private String host;
 	private List<ApartmentComment> comments;
 	private String image;
@@ -244,10 +244,10 @@ public class Apartment {
 	public void setLocation(Integer location) {
 		this.location = location;
 	}
-	public HashMap<Date,AvailableEnum> getAppartmentDates() {
+	public HashMap<Date,ReservationStatus> getAppartmentDates() {
 		return appartmentDates;
 	}
-	public void setAppartmentDates(HashMap<Date,AvailableEnum> appartmentDates) {
+	public void setAppartmentDates(HashMap<Date,ReservationStatus> appartmentDates) {
 		this.appartmentDates = appartmentDates;
 	}
 	public String getHost() {

@@ -1,8 +1,10 @@
 package services;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -191,14 +193,23 @@ public class ReservationService {
 	}
 	
 	@PUT
-	@Path("acceptReservation/{id}/{username}")
+	@Path("acceptReservation/{id}/{host}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response acceptReservation(@PathParam("id") UUID id, @PathParam("username") String username, @Context HttpServletRequest request) {
+	public Response acceptReservation(@PathParam("id") UUID id, @PathParam("host") String host, @Context HttpServletRequest request) throws ParseException {
 		ReservationDAO reservationDAO = (ReservationDAO) this.ctx.getAttribute("reservationDAO");
+		HashMap<String,Reservation> allReservations = reservationDAO.getReservations();
+		String str = String.valueOf(id);
+		Reservation reservation = allReservations.get(str);
+		ApartmentDAO apartmentDAO = (ApartmentDAO) this.ctx.getAttribute("apartmentDAO");
+		Apartment apartment = reservation.getApartment();
 		String contextPath = ctx.getRealPath("");
 		reservationDAO.acceptReservation(id);
-		Collection<Reservation> reservations = reservationDAO.getHostReservations(username);
+		HashMap<Date,ReservationStatus> availableDates = apartmentDAO.reserveApartment(apartment, reservation);
+		apartment.setAppartmentDates(availableDates);
+		String str2 = String.valueOf(apartment.getId());
+		apartmentDAO.getApartments().put(str2, apartment);
+		Collection<Reservation> reservations = reservationDAO.getHostReservations(host);
 		return Response.status(200).entity(reservations).build();
 	}
 }

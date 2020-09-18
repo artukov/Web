@@ -17,11 +17,11 @@
           <router-link to="/addApartment" v-if="this.$store.state.role == 'HOST'">Add apartment</router-link>|
           <router-link to="/myApartments" v-if="this.$store.state.role == 'HOST'">My apartments</router-link>|
           <!-- <router-link to="/" @click="logout" v-if="this.$store.state.user != null">Logout</router-link>| -->
-          <router-link to="/apartments">Apartments</router-link>|
-          <router-link to="/amenities">Amenities</router-link>|
+          <router-link to="/apartments" v-if="this.$store.state.user == null || this.$store.state.role == 'GUEST'">Apartments</router-link>|
+          <router-link to="/amenities" v-if="this.$store.state.role == 'ADMIN'">Amenities</router-link>|
           <router-link to="/reservations" v-if="this.$store.state.user != null">Reservations</router-link>|
-          <router-link to="/addUser">AddUser</router-link>|
-          <router-link to="/searchUsers">Users</router-link>|      
+          <router-link to="/addUser" v-if="this.$store.state.role == 'ADMIN'">AddUser</router-link>|
+          <router-link to="/searchUsers" v-if="this.$store.state.role == 'ADMIN'">Users</router-link>|      
         </b-navbar-nav>
         <button id="dugme" @click="logout" v-if="this.$store.state.user != null"><b>Logout</b></button>
       </b-navbar>

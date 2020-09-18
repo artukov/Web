@@ -10,7 +10,7 @@
         <b-alert show variant="success" class="d-flex justify-content-center">{{successmessages}}</b-alert>
         </b-container>
 
-        <div class="child d-flex justify-content-left" style="margin-top: 20px" >
+        <div class="child d-flex justify-content-left" style="margin-top: 20px" v-if="this.$store.state.role == 'GUEST'">
             <div class="card" style="width: 70%">
             
                 <div class="header pt-3 grey lighten-2">

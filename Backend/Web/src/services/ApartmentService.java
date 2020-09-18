@@ -41,6 +41,7 @@ import beans.Guest;
 import beans.Host;
 import beans.Location;
 import beans.Reservation;
+import beans.ReservationStatus;
 import beans.User;
 import dao.ApartmentDAO;
 import dao.LocationDAO;
@@ -241,7 +242,7 @@ public class ApartmentService {
 		ApartmentDAO apDAO = (ApartmentDAO)this.ctx.getAttribute("apartmentDAO");
 //		Apartment apartment = new Apartment();
 		String contextPath = ctx.getRealPath("");
-		HashMap<Date,AvailableEnum> listaDatuma = new HashMap<>();
+		HashMap<Date,ReservationStatus> listaDatuma = new HashMap<>();
 		Date now = new Date();
 		Date year = new Date();
 		year.setYear(now.getYear()+1);
@@ -250,7 +251,7 @@ public class ApartmentService {
 //		Date j = new Date();
 		for(i = now; before; i.setDate(i.getDate()+1)) {
 			Date j = (Date) i.clone();	
-			listaDatuma.put(j,AvailableEnum.FREE);
+			listaDatuma.put(j,ReservationStatus.FREE);
 			before = now.before(year);
 			int day = i.getDate();
 			int m = i.getMonth();
@@ -293,7 +294,11 @@ public class ApartmentService {
 //		apartmentMap.put(str,apartment);
 //		apDAO.dodajuFile(apartmentMap, contextPath);
 		Collection<Apartment> apartments = apDAO.getApartments().values();
-		apDAO.dodaj(apartment, contextPath);
+		HashMap<String,Apartment> apartmentsMap = apDAO.getApartments();
+		String str = String.valueOf(apartment.getId());
+		apartmentsMap.put(str,apartment);
+		apDAO.dodajuFile(apartmentsMap, contextPath);
+//		apDAO.dodaj(apartment, contextPath);
 		return Response.status(200).entity(apartments).build();
 	}
 	

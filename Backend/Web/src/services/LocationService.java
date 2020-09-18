@@ -80,9 +80,10 @@ public class LocationService {
 		LocationDAO locationDAO = (LocationDAO) ctx.getAttribute("locationDAO");
 //		User korisnik = new User("uganda", "sifra", "Bojan", "Simeunoviski", GenderEnum.MALE, UserRole.GUEST);
 //		User korisnik2 = new User("peru", "sifra", "Nikola", "Artukov", GenderEnum.MALE, UserRole.ADMIN);
-		Address adresa = new Address("Marka miljanova", 5, "Novi Sad", 21000);
+		Address adresa = new Address("Marka Miljanova", 5, "Novi Sad", 21000);
+		Address adresa2 = new Address("Episkopa Visariona", 10, "Beograd", 11000);
 		Location loca1 = new Location((double)10,(double)10, adresa);
-		Location loca2 = new Location((double)20,(double)42,adresa);
+		Location loca2 = new Location((double)20,(double)42,adresa2);
 		String contextPath = ctx.getRealPath("");
 //		userDao.dodaj(korisnik,contextPath);
 //		userDao.dodaj(korisnik2, contextPath);
